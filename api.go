@@ -366,7 +366,7 @@ func (a *ChAPI) makeGetRequest(path string, fullURL bool, contentType string) (*
 	if contentType != "" {
 		req.Header.Set("Acccept", contentType)
 	}
-	resp, err = executeRequest(req)
+	resp, err = a.executeRequest(req)
 
 	return resp, err
 }
