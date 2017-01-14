@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016, Balkan Technologies EOOD & Co. KD
+Copyright (C) 2016-2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,20 +20,17 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 )
 
 type (
-	// Filing struct contains the data of a company's filing
+	// Insolvency contains the data of an insolvency case
 	Insolvency struct {
 		Dates []struct {
 			Date string `json:"date"`
 			Type string `json:"type"`
 		} `json:"dates"`
 		Notes         []string `json:"notes"`
-		Number        int      `json:"number"`
+		Number        string   `json:"number"`
 		Practitioners []struct {
 			Address   Address `json:"address"`
 			Appointed string  `json:"appointed_on"`
@@ -44,7 +41,7 @@ type (
 		Type string `json:"type"`
 	}
 
-	// FilingResponse struct for API responses of Filing objects
+	// InsolvenciesResponse contains the server response of a data request to the companies house API
 	InsolvenciesResponse struct {
 		Etag   string       `json:"etag"`
 		Status []string     `json:"status"`
@@ -52,18 +49,18 @@ type (
 	}
 )
 
-// GetInsolvencyDetails func. Takes *Company. Returns (FilingResponse, error)
-func (c *Company) GetInsolvencyDetails() (InsolvenciesResponse, error) {
-	var res InsolvenciesResponse
-	body, err := c.API.callAPI("company/"+c.CompanyNumber+"/insolvency", false)
+// GetInsolvencyDetails gets the json data for a company's insolvency details from the Companies House REST API
+// and returns a new InsolvenciesResponse and an error
+func (c *Company) GetInsolvencyDetails() (*InsolvenciesResponse, error) {
+	res := &InsolvenciesResponse{}
+	body, err := c.API.callAPI("/company/"+c.CompanyNumber+"/insolvency", false, ContentTypeJSON)
 	if err != nil {
 		return res, err
 	}
 
-	err = json.Unmarshal(body, &res)
+	err = json.Unmarshal(body, res)
 	if err != nil {
 		return res, err
 	}
-
 	return res, err
 }

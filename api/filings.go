@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016, Balkan Technologies EOOD & Co. KD
+Copyright (C) 2016-2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,13 +20,11 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+	"errors"
 )
 
 type (
-	// Filing struct contains the data of a company's filing
+	// Filing contains the data of a company's filing
 	Filing struct {
 		Annotations []struct {
 			Annotation  string `json:"annotation"`
@@ -43,12 +41,9 @@ type (
 		Subcategory string `json:"subcategory"`
 		Date        string `json:"date"`
 		Description string `json:"description"`
-		Links       struct {
-			Document string `json:"document_metadata"`
-			Self     string `json:"self"`
-		} `json:"links"`
-		Pages       int  `json:"pages"`
-		PaperFiled  bool `json:"paper_filed"`
+		Links       Links  `json:"links"`
+		Pages       int    `json:"pages"`
+		PaperFiled  bool   `json:"paper_filed"`
 		Resolutions []struct {
 			Category    string `json:"category"`
 			Description string `json:"description"`
@@ -61,7 +56,7 @@ type (
 		Type          string `json:"type"`
 	}
 
-	// FilingResponse struct for API responses of Filing objects
+	// FilingResponse contains the server response of a data request to the companies house API
 	FilingResponse struct {
 		Etag         string   `json:"etag"`
 		Kind         string   `json:"kind"`
@@ -73,26 +68,26 @@ type (
 	}
 )
 
-// DownloadURL func. Takes *Filing. Returns (string, error)
-func (c *Company) DownloadURL(f *Filing) (string, error) {
-	var fu string
-	var body map[string]string
-
-	fmt.Printf("Document url: %s\n", f.Links.Document)
-	resp, err := c.API.makeGetRequest(f.Links.Document, true, "application/pdf")
+// GetDownloadURL returns the download URL for a document related to a company's filing
+// and returns a string with the url and an error
+func (c *Company) GetDownloadURL(f *Filing) (string, error) {
+	resp, err := c.API.getResponse(f.Links.Document+"/content", ContentTypePDF)
 	if err != nil {
-		return fu, err
+		return "", err
 	}
-	fmt.Printf("Header: %+v", resp.Header)
-	json.NewDecoder(resp.Body).Decode(&body)
-	fmt.Printf("%+v", body)
-	return fu, err
+
+	if len(resp.Header.Get("Location")) == 0 {
+		return "", errors.New("Response's header has no Location")
+	}
+
+	return resp.Header.Get("Location"), err
 }
 
-// GetFilings func. Takes *Company. Returns (FilingResponse, error)
-func (c *Company) GetFilings() (FilingResponse, error) {
-	var res FilingResponse
-	body, err := c.API.callAPI("company/"+c.CompanyNumber+"/filing-history", false)
+// GetFilings gets the json data for a company's filing hisotry from the Companies House REST API
+// and returns a new FilingResponse and an error
+func (c *Company) GetFilings() (*FilingResponse, error) {
+	res := &FilingResponse{}
+	body, err := c.API.callAPI("/company/"+c.CompanyNumber+"/filing-history", false, ContentTypeJSON)
 	if err != nil {
 		return res, err
 	}

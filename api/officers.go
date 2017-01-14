@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016, Balkan Technologies EOOD & Co. KD
+Copyright (C) 2016-2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,9 +20,6 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 )
 
 type (
@@ -42,7 +39,7 @@ type (
 		RegistrationNumber string `json:"registration_number"`
 	}
 
-	// Officer struct contains Officer data
+	// Officer struct contains the data of a company's officers
 	Officer struct {
 		Address            Address     `json:"address"`
 		AppointedOn        string      `json:"appointed_on"`
@@ -65,7 +62,7 @@ type (
 		ResignedOn  string `json:"resigned_on"`
 	}
 
-	// OfficerResponse struct for API responses of Officer objects
+	// OfficerResponse contains the server response of a data request to the companies house API
 	OfficerResponse struct {
 		Etag                   string    `json:"etag"`
 		Kind                   string    `json:"kind"`
@@ -81,10 +78,11 @@ type (
 	}
 )
 
-// GetOfficers func. Takes *Company. Returns (OfficerResponse, error)
-func (c *Company) GetOfficers() (OfficerResponse, error) {
-	var res OfficerResponse
-	body, err := c.API.callAPI("company/"+c.CompanyNumber+"/officers", false)
+// GetOfficers gets the json data for a company's officers from the Companies House REST API
+// and returns a new OfficersResponse and an error
+func (c *Company) GetOfficers() (*OfficerResponse, error) {
+	res := &OfficerResponse{}
+	body, err := c.API.callAPI("/company/"+c.CompanyNumber+"/officers", false, ContentTypeJSON)
 	if err != nil {
 		return res, err
 	}

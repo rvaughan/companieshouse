@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016, Balkan Technologies EOOD & Co. KD
+Copyright (C) 2016-2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,13 +20,10 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 )
 
 type (
-	// Filing struct contains the data of a company's filing
+	// Charge contains the data of a company's charges
 	Charge struct {
 		ID                   string `json:"id"`
 		Etag                 string `json:"etag"`
@@ -34,7 +31,7 @@ type (
 		AssetsCeasedReleased string `json:"assets_ceased_released"`
 		ChargeCode           string `json:"charge_code"`
 		ChargeNumber         int    `json:"charge_number"`
-		Classification       []struct {
+		Classification       struct {
 			Description string `json:"description"`
 			Type        string `json:"type"`
 		} `json:"classification"`
@@ -81,14 +78,14 @@ type (
 			FilingType       string `json:"filing_type"`
 			InsolvencyNumber int    `json:"insolvency_case_number"`
 			Links            struct {
-				Filing         string `json:"filing"`
-				InsolvencyCase `json:"insolvency_case"`
+				Filing     string `json:"filing"`
+				Insolvency `json:"insolvency_case"`
 			} `json:"links"`
 			TransactionID string `json:"transaction_id"`
 		} `json:"transactions"`
 	}
 
-	// FilingResponse struct for API responses of Filing objects
+	// ChargesResponse contains the server response of a data request to the companies house API
 	ChargesResponse struct {
 		Etag          string   `json:"etag"`
 		PartSatisfied int      `json:"part_satisfied_count"`
@@ -99,15 +96,16 @@ type (
 	}
 )
 
-// GetCharges func. Takes *Company. Returns (FilingResponse, error)
-func (c *Company) GetCharges() (ChargesResponse, error) {
-	var res ChargesResponse
-	body, err := c.API.callAPI("company/"+c.CompanyNumber+"/charges", false)
+// GetCharges gets the json data for a company's charges from the Companies House REST API
+// and returns a new ChargesResponse and an error
+func (c *Company) GetCharges() (*ChargesResponse, error) {
+	res := &ChargesResponse{}
+	body, err := c.API.callAPI("/company/"+c.CompanyNumber+"/charges", false, ContentTypeJSON)
 	if err != nil {
 		return res, err
 	}
 
-	err = json.Unmarshal(body, &res)
+	err = json.Unmarshal(body, res)
 	if err != nil {
 		return res, err
 	}

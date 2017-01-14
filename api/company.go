@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016, Balkan Technologies EOOD & Co. KD
+Copyright (C) 2016-2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,26 +20,10 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 )
 
 type (
-	// Address struct contains the structure of addresses used by Companies House
-	Address struct {
-		Premises string `json:"premises"`
-		Address1 string `json:"address_line_1"`
-		Address2 string `json:"address_line_2"`
-		Locality string `json:"locality"`
-		Region   string `json:"region"`
-		Postcode string `json:"postal_code"`
-		Country  string `json:"country"`
-		CareOf   string `json:"care_of"`
-		PoBox    string `json:"po_box"`
-	}
-
-	// PreviousName struct contains data of previous names and the time of use
+	// PreviousName struct contains data of a company's previous names and the time of use
 	PreviousName struct {
 		Name  string `json:"name"`
 		From  string `json:"effective_from"`
@@ -48,11 +32,11 @@ type (
 
 	// RefDate struct consists of Day and Month
 	RefDate struct {
-		Day   int `json:"day"`
-		Month int `json:"month"`
+		Day   string `json:"day"`
+		Month string `json:"month"`
 	}
 
-	// AnnualAccounts struct contains the last and next filing info for the Annual Accounts
+	// AnnualAccounts struct contains a company's last and next filing info for the Annual Accounts
 	AnnualAccounts struct {
 		RefDate      RefDate `json:"accounting_reference_date"`
 		LastAccounts struct {
@@ -64,21 +48,12 @@ type (
 		Overdue      bool   `json:"overdue"`
 	}
 
-	// AnnualReturn struct contains the last and next filing dates for the Annual Return
+	// AnnualReturn struct contains a company's the last and next filing dates for the Annual Return
 	AnnualReturn struct {
 		LastMadeUpTo string `json:"last_made_up_to"`
 		NextDue      string `json:"next_due"`
 		NextMadeUpTo string `json:"next_made_up_to"`
 		Overdue      bool   `json:"overdue"`
-	}
-
-	// Links struct contains links to additional data and the original object (Self)
-	Links struct {
-		Psc              string `json:"persons_with_significant_control"`
-		PscStatements    string `json:"persons_with_significant_control_statements`
-		Registers        string `json:"registers"`
-		UkEstablishments string `json:"uk_establishments"`
-		Self             string `json:"self"`
 	}
 
 	// Branch struct contains data of a Branch
@@ -116,7 +91,7 @@ type (
 	Company struct {
 		API                 *ChAPI
 		Etag                string `json:"etag"`
-		CompanyNumber       string `json:"companyNumber"`
+		CompanyNumber       string `json:"company_number"`
 		CompanyName         string `json:"company_name"`
 		CanFile             bool   `json:"can_file"`
 		CompanyType         string `json:"type"`
@@ -146,18 +121,19 @@ type (
 	}
 )
 
-// GetCompany func. Takes companyNumber string. Returns (Company, error)
-func (a *ChAPI) GetCompany(companyNumber string) (Company, error) {
-	var c Company
+// GetCompany gets the json data for a company from the Companies House REST API
+// and returns a new Company and an error
+func (a *ChAPI) GetCompany(companyNumber string) (*Company, error) {
+	c := &Company{}
 
-	body, err := a.callAPI("company/"+companyNumber, false)
+	body, err := a.callAPI("/company/"+companyNumber, false, ContentTypeJSON)
 	if err != nil {
-		return Company{}, err
+		return c, err
 	}
 
 	err = json.Unmarshal(body, &c)
 	if err != nil {
-		return Company{}, err
+		return c, err
 	}
 
 	c.API = a
