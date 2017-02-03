@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016-2017, Balkan C & T OOD
+Copyright (C) 2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ func (c *Company) GetDownloadURL(f *Filing) (string, error) {
 // and returns a new FilingResponse and an error
 func (c *Company) GetFilings() (*FilingResponse, error) {
 	res := &FilingResponse{}
-	body, err := c.API.callAPI("/company/"+c.CompanyNumber+"/filing-history", false, ContentTypeJSON)
+	body, err := c.API.CallAPI("/company/"+c.CompanyNumber+"/filing-history", false, ContentTypeJSON)
 	if err != nil {
 		return res, err
 	}

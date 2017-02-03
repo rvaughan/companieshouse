@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016-2017, Balkan C & T OOD
+Copyright (C) 2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ type (
 // and returns a new InsolvenciesResponse and an error
 func (c *Company) GetInsolvencyDetails() (*InsolvenciesResponse, error) {
 	res := &InsolvenciesResponse{}
-	body, err := c.API.callAPI("/company/"+c.CompanyNumber+"/insolvency", false, ContentTypeJSON)
+	body, err := c.API.CallAPI("/company/"+c.CompanyNumber+"/insolvency", false, ContentTypeJSON)
 	if err != nil {
 		return res, err
 	}

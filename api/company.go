@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016-2017, Balkan C & T OOD
+Copyright (C) 2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -126,7 +126,7 @@ type (
 func (a *ChAPI) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{}
 
-	body, err := a.callAPI("/company/"+companyNumber, false, ContentTypeJSON)
+	body, err := a.CallAPI("/company/"+companyNumber, false, ContentTypeJSON)
 	if err != nil {
 		return c, err
 	}

@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016-2017, Balkan C & T OOD
+Copyright (C) 2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ type (
 		AppointedOn        string      `json:"appointed_on"`
 		CountryOfResidence string      `json:"country_of_residence"`
 		Dob                DateOfBirth `json:"date_of_birth"`
-		FomerNames         []struct {
+		FormerNames         []struct {
 			Forenames string `json:"forenames"`
 			Surname   string `json:"surname"`
 		} `json:"former_names"`
@@ -70,7 +70,7 @@ type (
 		ItemsPerPage           int       `json:"items_per_page"`
 		TotalResults           int       `json:"total_results"`
 		ActiveAppointments     int       `json:"active_count"`
-		ResignatedAppointments int       `json:"resigned_count"`
+		Resignations 	       int       `json:"resigned_count"`
 		Officers               []Officer `json:"items"`
 		Links                  struct {
 			self string `json:"self"`
@@ -82,7 +82,7 @@ type (
 // and returns a new OfficersResponse and an error
 func (c *Company) GetOfficers() (*OfficerResponse, error) {
 	res := &OfficerResponse{}
-	body, err := c.API.callAPI("/company/"+c.CompanyNumber+"/officers", false, ContentTypeJSON)
+	body, err := c.API.CallAPI("/company/"+c.CompanyNumber+"/officers", false, ContentTypeJSON)
 	if err != nil {
 		return res, err
 	}

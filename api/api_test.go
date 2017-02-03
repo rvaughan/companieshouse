@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016-2017, Balkan C & T OOD
+Copyright (C) 2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"github.com/BalkanTech/companieshouse/testhandlers"
+	"github.com/BalkanTech/companieshouse/api/testhandlers"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -250,7 +250,7 @@ func TestCallAPI(t *testing.T) {
 	{
 		t.Logf("\tWhen checking \"%s\"", server.URL)
 		{
-			resp, err := api.callAPI(server.URL+"/test", true, ContentTypeJSON)
+			resp, err := api.CallAPI(server.URL+"/test", true, ContentTypeJSON)
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the call.", testFailed, err)

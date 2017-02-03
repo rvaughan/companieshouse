@@ -1,6 +1,6 @@
 /*
 Golang Companies House REST service API
-Copyright (C) 2016-2017, Balkan C & T OOD
+Copyright (C) 2017, Balkan C & T OOD
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -90,7 +90,11 @@ func (a *ChAPI) getResponse(url string, contentType string) (*http.Response, err
 	return client.Do(req)
 }
 
-func (a *ChAPI) callAPI(path string, fullURL bool, contentType string) ([]byte, error) {
+// CallAPI will make a call to the companies house API to the provided path
+// Set fullURL to true if the path is a full URL
+// Set contentType to the desired content type. If contentType is an empty string then ContentTypeJSON will be used.
+// Returns the response's body as a slice of bytes and an error
+func (a *ChAPI) CallAPI(path string, fullURL bool, contentType string) ([]byte, error) {
 	var url string
 
 	if fullURL {
