@@ -37,6 +37,9 @@ func TestGetInsolvencies(t *testing.T) {
 	insolvenciesServer := httptest.NewServer(http.HandlerFunc(testhandlers.GetInsolvenciesHandler))
 	defer insolvenciesServer.Close()
 
+	api := API{}
+	api.SetAPIKey("12345")
+
 	t.Log("Testing the GetInsolvencies function")
 	{
 		t.Log("\tWhen checking companies for insolvencies")

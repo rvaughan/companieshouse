@@ -36,6 +36,8 @@ func TestGetCharges(t *testing.T) {
 
 	insolvenciesServer := httptest.NewServer(http.HandlerFunc(testhandlers.GetChargesHandler))
 	defer insolvenciesServer.Close()
+	api := API{}
+	api.SetAPIKey("12345")
 
 	t.Log("Testing the GetCharges function")
 	{

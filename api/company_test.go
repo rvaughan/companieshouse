@@ -47,6 +47,8 @@ func TestGetCompany(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetCompanyHandler))
 	defer server.Close()
 
+	api := API{}
+	api.SetAPIKey("12345")
 	api.setAPIURL(server.URL)
 
 	t.Log("Testing the GetCompany function")
@@ -54,7 +56,7 @@ func TestGetCompany(t *testing.T) {
 		t.Logf("\tUsing server \"%s\". Testing calls supposed to pass", server.URL)
 		{
 			for _, test := range TestCompanies {
-				c := &Company{API: &api}
+				c := &Company{api: &api}
 				data, _ := testhandlers.GetResponse(test.company, testhandlers.Companies)
 				json.Unmarshal([]byte(data), c)
 
@@ -62,7 +64,7 @@ func TestGetCompany(t *testing.T) {
 				resp, err := api.GetCompany(test.company)
 				{
 					if err != nil {
-						t.Fatalf("\t\t\tShould be able to make the call.", testFailed, err)
+						t.Fatalf("\t\t\tShould be able to make the call, but got error: %s. %v", err, testFailed)
 					}
 					t.Log("\t\t\tShould be able to make the call.", testOK)
 
@@ -86,7 +88,6 @@ func TestGetCompany(t *testing.T) {
 
 		t.Logf("\tUsing server \"%s\". Testing call with invalid authorization", server.URL)
 		{
-			api := ChAPI{}
 			api.SetAPIKey("invalid")
 			api.setAPIURL(server.URL)
 

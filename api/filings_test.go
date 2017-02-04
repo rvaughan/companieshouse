@@ -40,6 +40,9 @@ func TestGetFilings(t *testing.T) {
 	documentServer := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer documentServer.Close()
 
+	api := API{}
+	api.SetAPIKey("12345")
+
 	t.Log("Testing the GetInsolvencies function")
 	{
 		t.Log("\tWhen checking companies for insolvencies")

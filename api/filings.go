@@ -71,7 +71,7 @@ type (
 // GetDownloadURL returns the download URL for a document related to a company's filing
 // and returns a string with the url and an error
 func (c *Company) GetDownloadURL(f *Filing) (string, error) {
-	resp, err := c.API.getResponse(f.Links.Document+"/content", ContentTypePDF)
+	resp, err := c.api.getResponse(f.Links.Document+"/content", ContentTypePDF)
 	if err != nil {
 		return "", err
 	}
@@ -86,16 +86,16 @@ func (c *Company) GetDownloadURL(f *Filing) (string, error) {
 // GetFilings gets the json data for a company's filing hisotry from the Companies House REST API
 // and returns a new FilingResponse and an error
 func (c *Company) GetFilings() (*FilingResponse, error) {
-	res := &FilingResponse{}
-	body, err := c.API.CallAPI("/company/"+c.CompanyNumber+"/filing-history", false, ContentTypeJSON)
+	filings := &FilingResponse{}
+	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/filing-history", false, ContentTypeJSON)
 	if err != nil {
-		return res, err
+		return filings, err
 	}
 
-	err = json.Unmarshal(body, &res)
+	err = json.Unmarshal(resp, &filings)
 	if err != nil {
-		return res, err
+		return filings, err
 	}
 
-	return res, err
+	return filings, err
 }

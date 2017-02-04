@@ -30,11 +30,7 @@ import (
 const testOK = "\u2713"
 const testFailed = "\u2717"
 
-var api ChAPI
-
-func init() {
-	api.SetAPIKey("12345")
-}
+//var api API
 
 // TestURlCreation is a unit test for the urlCreation function
 // The test will check if urls are properly formed based upon the apiURL value of the ChAPI struct
@@ -43,6 +39,9 @@ func init() {
 func TestURLCreation(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer server.Close()
+
+	api := API{}
+	api.SetAPIKey("12345")
 
 	var tests = []struct {
 		path     string
@@ -99,6 +98,9 @@ func TestPrepareRequest(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer server.Close()
 
+	api := API{}
+	api.SetAPIKey("12345")
+
 	method := "GET"
 	url, _ := url.Parse(server.URL)
 	header := "Basic MTIzNDU6"
@@ -140,6 +142,8 @@ func TestGetResponse(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer server.Close()
 
+	api := API{}
+	api.SetAPIKey("12345")
 	api.setAPIURL(server.URL)
 
 	t.Log("Testing getResponse function")
@@ -244,6 +248,8 @@ func TestCallAPI(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer server.Close()
 
+	api := API{}
+	api.SetAPIKey("12345")
 	api.setAPIURL(server.URL)
 
 	t.Log("Testing the callAPI function")

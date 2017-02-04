@@ -52,15 +52,15 @@ type (
 // GetInsolvencyDetails gets the json data for a company's insolvency details from the Companies House REST API
 // and returns a new InsolvenciesResponse and an error
 func (c *Company) GetInsolvencyDetails() (*InsolvenciesResponse, error) {
-	res := &InsolvenciesResponse{}
-	body, err := c.API.CallAPI("/company/"+c.CompanyNumber+"/insolvency", false, ContentTypeJSON)
+	insolvencies := &InsolvenciesResponse{}
+	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", false, ContentTypeJSON)
 	if err != nil {
-		return res, err
+		return insolvencies, err
 	}
 
-	err = json.Unmarshal(body, res)
+	err = json.Unmarshal(resp, insolvencies)
 	if err != nil {
-		return res, err
+		return insolvencies, err
 	}
-	return res, err
+	return insolvencies, err
 }

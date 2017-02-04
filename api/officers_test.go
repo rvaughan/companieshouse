@@ -37,6 +37,9 @@ func TestGetOfficers(t *testing.T) {
 	officersServer := httptest.NewServer(http.HandlerFunc(testhandlers.GetOfficersHandler))
 	defer officersServer.Close()
 
+	api := API{}
+	api.SetAPIKey("12345")
+
 	t.Log("Testing the GetOfficers function")
 	{
 		t.Log("\tWhen checking companies for officers")

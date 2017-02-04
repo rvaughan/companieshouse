@@ -81,16 +81,16 @@ type (
 // GetOfficers gets the json data for a company's officers from the Companies House REST API
 // and returns a new OfficersResponse and an error
 func (c *Company) GetOfficers() (*OfficerResponse, error) {
-	res := &OfficerResponse{}
-	body, err := c.API.CallAPI("/company/"+c.CompanyNumber+"/officers", false, ContentTypeJSON)
+	officers := &OfficerResponse{}
+	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/officers", false, ContentTypeJSON)
 	if err != nil {
-		return res, err
+		return officers, err
 	}
 
-	err = json.Unmarshal(body, &res)
+	err = json.Unmarshal(resp, &officers)
 	if err != nil {
-		return res, err
+		return officers, err
 	}
 
-	return res, err
+	return officers, err
 }

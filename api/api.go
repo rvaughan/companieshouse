@@ -37,32 +37,32 @@ const(
 	defaultDocumentURL = "https://document-api.companieshouse.gov.uk"
 )
 
-// ChAPI implements access to the Companies House REST API
-type ChAPI struct {
+// API implements access to the Companies House REST API
+type API struct {
 	apiKey              string
 	apiURL              string
 	overWriteDefaultURL bool
 }
 
-// setAPIURL allows to override the apiURL value of ChAPI. Such overriding is meant for proper functioning of unit tests
+// setAPIURL allows to override the apiURL value of API. Such overriding is meant for proper functioning of unit tests
 // and should normally not be used in production
-func (a *ChAPI) setAPIURL(u string) {
+func (a *API) setAPIURL(u string) {
 	a.apiURL = u
 	a.overWriteDefaultURL = true
 }
 
-//SetAPIKey sets the apiKey value for the ChAPI struct and sets an inital value to the Companies House REST url
-func (a *ChAPI) SetAPIKey(k string) {
+//SetAPIKey sets the apiKey value for the API struct and sets an inital value to the Companies House REST url
+func (a *API) SetAPIKey(k string) {
 	a.apiKey = k
 	a.apiURL = defaultURL
 	a.overWriteDefaultURL = false
 }
 
-func (a *ChAPI) constructURL(path string) string {
+func (a *API) constructURL(path string) string {
 	return a.apiURL + path
 }
 
-func (a *ChAPI) prepareRequest(url string) (*http.Request, error) {
+func (a *API) prepareRequest(url string) (*http.Request, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return req, err
@@ -72,7 +72,7 @@ func (a *ChAPI) prepareRequest(url string) (*http.Request, error) {
 	return req, err
 }
 
-func (a *ChAPI) getResponse(url string, contentType string) (*http.Response, error) {
+func (a *API) getResponse(url string, contentType string) (*http.Response, error) {
 	if a.overWriteDefaultURL {
 		url = strings.Replace(url, defaultURL, a.apiURL, -1)
 		url = strings.Replace(url, defaultDocumentURL, a.apiURL, -1)
@@ -90,11 +90,11 @@ func (a *ChAPI) getResponse(url string, contentType string) (*http.Response, err
 	return client.Do(req)
 }
 
-// CallAPI will make a call to the companies house API to the provided path
+// CallAPI makes a call to the companies house API via the provided path
 // Set fullURL to true if the path is a full URL
 // Set contentType to the desired content type. If contentType is an empty string then ContentTypeJSON will be used.
 // Returns the response's body as a slice of bytes and an error
-func (a *ChAPI) CallAPI(path string, fullURL bool, contentType string) ([]byte, error) {
+func (a *API) CallAPI(path string, fullURL bool, contentType string) ([]byte, error) {
 	var url string
 
 	if fullURL {

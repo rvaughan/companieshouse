@@ -89,7 +89,7 @@ type (
 
 	// Company struct contains basic company data
 	Company struct {
-		API                 *ChAPI
+		api                 *API `json:"-"`
 		Etag                string `json:"etag"`
 		CompanyNumber       string `json:"company_number"`
 		CompanyName         string `json:"company_name"`
@@ -123,20 +123,20 @@ type (
 
 // GetCompany gets the json data for a company from the Companies House REST API
 // and returns a new Company and an error
-func (a *ChAPI) GetCompany(companyNumber string) (*Company, error) {
+func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{}
 
-	body, err := a.CallAPI("/company/"+companyNumber, false, ContentTypeJSON)
+	resp, err := a.CallAPI("/company/"+companyNumber, false, ContentTypeJSON)
 	if err != nil {
 		return c, err
 	}
 
-	err = json.Unmarshal(body, &c)
+	err = json.Unmarshal(resp, &c)
 	if err != nil {
 		return c, err
 	}
 
-	c.API = a
+	c.api = a
 
 	return c, err
 }
