@@ -7,6 +7,7 @@ import (
 	"os"
 	"github.com/BalkanTech/companieshouse/api"
 	"github.com/gorilla/mux"
+	"log"
 )
 
 type Alert struct {
@@ -39,6 +40,7 @@ func main() {
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	data := newData()
 	if r.Method == "POST" {
+		log.Println("Got a POST request in rootHandler")
 		q := r.FormValue("SearchText")
 		t := r.FormValue("SearchFor")
 		if q == "" || t == "" {
