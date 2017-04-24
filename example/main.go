@@ -52,6 +52,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 		if q == "" || f == "" {
 			data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", "Enter a search text and search type"})
 			t.ExecuteTemplate(w, "base", data)
+			return
 		}
 
 		switch f {
