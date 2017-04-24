@@ -35,6 +35,6 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w,"Error while parsing template: %s", err.Error())
 		return
 	}
-	t.ExecuteTemplate(w, "content", nil)
+	t.ExecuteTemplate(w, "base", nil)
 }
 
