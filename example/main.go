@@ -30,7 +30,7 @@ func main() {
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("base.html", "root.html")
+	t, err := template.ParseFiles("templates/base.html", "templates/root.html")
 	if err != nil {
 		fmt.Fprintf(w,"Error while parsing template: %s", err.Error())
 		return
