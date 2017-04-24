@@ -53,7 +53,7 @@ type (
 // and returns a new InsolvenciesResponse and an error
 func (c *Company) GetInsolvencyDetails() (*InsolvenciesResponse, error) {
 	insolvencies := &InsolvenciesResponse{}
-	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", false, ContentTypeJSON)
+	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", nil, false, ContentTypeJSON)
 	if err != nil {
 		return insolvencies, err
 	}

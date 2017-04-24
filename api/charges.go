@@ -101,7 +101,7 @@ type (
 func (c *Company) GetCharges() (*ChargesResponse, error) {
 	charges := &ChargesResponse{}
 
-	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/charges", false, ContentTypeJSON)
+	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/charges", nil, false, ContentTypeJSON)
 	if err != nil {
 		return charges, err
 	}

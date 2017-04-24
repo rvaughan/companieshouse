@@ -44,6 +44,8 @@ type API struct {
 	overWriteDefaultURL bool
 }
 
+type QueryParams map[string]interface{}
+
 // setAPIURL allows to override the apiURL value of API. Such overriding is meant for proper functioning of unit tests
 // and should normally not be used in production
 func (a *API) setAPIURL(u string) {
@@ -72,21 +74,27 @@ func (a *API) prepareRequest(url string) (*http.Request, error) {
 	return req, err
 }
 
-func (a *API) getResponse(url string, contentType string) (*http.Response, error) {
+func (a *API) getResponse(url string, params QueryParams, contentType string) (*http.Response, error) {
 	if a.overWriteDefaultURL {
 		url = strings.Replace(url, defaultURL, a.apiURL, -1)
 		url = strings.Replace(url, defaultDocumentURL, a.apiURL, -1)
 	}
 	req, err := a.prepareRequest(url)
 	if err != nil {
-		return &http.Response{}, err
+		return nil, err
 	}
+
+	q := req.URL.Query()
+	for k, v := range params {
+		q.Add(k, v.(string))
+	}
+	req.URL.RawQuery = q.Encode()
 
 	if contentType != "" {
 		req.Header.Set("Accept", contentType)
 	}
-	client := &http.Client{}
 
+	client := &http.Client{}
 	return client.Do(req)
 }
 
@@ -94,7 +102,7 @@ func (a *API) getResponse(url string, contentType string) (*http.Response, error
 // Set fullURL to true if the path is a full URL
 // Set contentType to the desired content type. If contentType is an empty string then ContentTypeJSON will be used.
 // Returns the response's body as a slice of bytes and an error
-func (a *API) CallAPI(path string, fullURL bool, contentType string) ([]byte, error) {
+func (a *API) CallAPI(path string, params QueryParams, fullURL bool, contentType string) ([]byte, error) {
 	var url string
 
 	if fullURL {
@@ -107,7 +115,7 @@ func (a *API) CallAPI(path string, fullURL bool, contentType string) ([]byte, er
 		contentType = ContentTypeJSON
 	}
 
-	resp, err := a.getResponse(url, contentType)
+	resp, err := a.getResponse(url, params, contentType)
 	if err != nil {
 		return []byte{}, err
 	}
@@ -117,4 +125,10 @@ func (a *API) CallAPI(path string, fullURL bool, contentType string) ([]byte, er
 	}
 
 	return ioutil.ReadAll(resp.Body)
+}
+
+func CompaniesHouseAPI(key string) *API{
+	api := &API{}
+	api.SetAPIKey(key)
+	return api
 }

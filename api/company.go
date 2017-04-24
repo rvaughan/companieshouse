@@ -119,6 +119,7 @@ type (
 		Branch                Branch         `json:"branch_company_details"`
 		ForeignCompany        ForeignCompany `json:"foreign_company_details"`
 	}
+
 )
 
 // GetCompany gets the json data for a company from the Companies House REST API
@@ -126,14 +127,14 @@ type (
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{}
 
-	resp, err := a.CallAPI("/company/"+companyNumber, false, ContentTypeJSON)
+	resp, err := a.CallAPI("/company/"+companyNumber, nil, false, ContentTypeJSON)
 	if err != nil {
 		return c, err
 	}
 
 	err = json.Unmarshal(resp, &c)
 	if err != nil {
-		return c, err
+		return nil, err
 	}
 
 	c.api = a

@@ -82,7 +82,7 @@ type (
 // and returns a new OfficersResponse and an error
 func (c *Company) GetOfficers() (*OfficerResponse, error) {
 	officers := &OfficerResponse{}
-	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/officers", false, ContentTypeJSON)
+	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/officers", nil, false, ContentTypeJSON)
 	if err != nil {
 		return officers, err
 	}

@@ -150,7 +150,7 @@ func TestGetResponse(t *testing.T) {
 	{
 		t.Logf("\tWhen checking \"%s\" for status code \"%d\" without a content type", server.URL, statusCode)
 		{
-			resp, err := api.getResponse(server.URL, "")
+			resp, err := api.getResponse(server.URL, nil, "")
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the Get call.", testFailed, err)
@@ -184,7 +184,7 @@ func TestGetResponse(t *testing.T) {
 
 		t.Logf("\tWhen checking \"%s\" for status code \"%d\" with a content type %s", server.URL, statusCode, contentType)
 		{
-			resp, err := api.getResponse(server.URL, contentType)
+			resp, err := api.getResponse(server.URL, nil, contentType)
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the Get call.", testFailed, err)
@@ -213,7 +213,7 @@ func TestGetResponse(t *testing.T) {
 		url := "https://document-api.companieshouse.gov.uk/document/n1EjP_MALLs8xZp5hs86iHcYDli0TE-n6t4HUDeZuq8/content"
 		t.Logf("\tWhen checking \"%s\" for status code \"%d\" with a content type %s to see if overriding works", url, statusCode, contentType)
 		{
-			resp, err := api.getResponse(url, contentType)
+			resp, err := api.getResponse(url, nil, contentType)
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the Get call.", testFailed, err)
@@ -256,7 +256,7 @@ func TestCallAPI(t *testing.T) {
 	{
 		t.Logf("\tWhen checking \"%s\"", server.URL)
 		{
-			resp, err := api.CallAPI(server.URL+"/test", true, ContentTypeJSON)
+			resp, err := api.CallAPI(server.URL+"/test", nil, true, ContentTypeJSON)
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the call.", testFailed, err)
