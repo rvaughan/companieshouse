@@ -18,7 +18,7 @@ type (
 
 	SearchResult struct {
 		Address SearchAddress `json:"address"`
-		AddressSnippet string `json:"address_snipet"`
+		AddressSnippet string `json:"address_snippet"`
 		Description string `json:"description"`
 		DescriptionIdentifier []string `json:"description_identifier"`
 		Kind string `json:"kind"`
