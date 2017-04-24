@@ -60,21 +60,21 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", err.Error()})
 			} else {
-				data.Data["Companies"] = r
+				data.Data["Companies"] = *r
 			}
 		case "O":
 			r, err := ch.SearchOfficer(q, 0, 0)
 			if err != nil {
 				data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", err.Error()})
 			} else {
-				data.Data["Officers"] = r
+				data.Data["Officers"] = *r
 			}
 		case "D":
 			r, err := ch.SearchDisqualifiedOfficer(q, 0, 0)
 			if err != nil {
 				data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", err.Error()})
 			} else {
-				data.Data["DiscOfficers"] = r
+				data.Data["DiscOfficers"] = *r
 			}
 		default:
 			data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", "Invalid search type"})
