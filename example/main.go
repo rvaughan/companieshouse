@@ -13,7 +13,7 @@ import (
 type Alert struct {
 	Title string
 	Class string
-	Text string
+	Message string
 }
 
 type Data struct {
