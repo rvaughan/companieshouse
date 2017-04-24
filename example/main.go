@@ -48,13 +48,13 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Got a \"%s\" request in rootHandler", r.Method)
 	if r.Method == "POST" {
 		q := r.FormValue("SearchText")
-		t := r.FormValue("SearchFor")
-		if q == "" || t == "" {
+		f := r.FormValue("SearchFor")
+		if q == "" || f == "" {
 			data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", "Enter a search text and search type"})
 			t.ExecuteTemplate(w, "base", data)
 		}
 
-		switch t {
+		switch f {
 		case "C":
 			r, err := ch.SearchCompany(q, 0, 0)
 			if err != nil {
