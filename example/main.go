@@ -39,12 +39,19 @@ func main() {
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	data := newData()
+	t, err := template.ParseFiles("templates/base.html", "templates/root.html")
+	if err != nil {
+		fmt.Fprintf(w,"Error while parsing template: %s", err.Error())
+		return
+	}
+
 	log.Printf("Got a \"%s\" request in rootHandler", r.Method)
 	if r.Method == "POST" {
 		q := r.FormValue("SearchText")
 		t := r.FormValue("SearchFor")
 		if q == "" || t == "" {
 			data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", "Enter a search text and search type"})
+			t.ExecuteTemplate(w, "base", data)
 		}
 
 		switch t {
@@ -72,11 +79,6 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 		default:
 			data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", "Invalid search type"})
 		}
-	}
-	t, err := template.ParseFiles("templates/base.html", "templates/root.html")
-	if err != nil {
-		fmt.Fprintf(w,"Error while parsing template: %s", err.Error())
-		return
 	}
 	t.ExecuteTemplate(w, "base", data)
 }
