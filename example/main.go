@@ -39,7 +39,7 @@ func main() {
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	data := newData()
-	log.Println("Got a \"%s\" request in rootHandler", r.Method)
+	log.Printf("Got a \"%s\" request in rootHandler", r.Method)
 	if r.Method == "POST" {
 		q := r.FormValue("SearchText")
 		t := r.FormValue("SearchFor")
