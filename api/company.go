@@ -20,6 +20,7 @@ package companieshouse
 
 import (
 	"encoding/json"
+	"time"
 )
 
 type (
@@ -121,6 +122,22 @@ type (
 	}
 
 )
+
+func (c Company) DateOfCreationFormatted(s string) string {
+	t, err := time.Parse("2006-01-02", c.DateOfCreation)
+	if err != nil {
+		return ""
+	}
+	return t.Format(s)
+}
+
+func (c Company) DateOfCessationFormatted(s string) string {
+	t, err := time.Parse("2006-01-02", c.DateOfCessation)
+	if err != nil {
+		return ""
+	}
+	return t.Format(s)
+}
 
 // GetCompany gets the json data for a company from the Companies House REST API
 // and returns a new Company and an error
