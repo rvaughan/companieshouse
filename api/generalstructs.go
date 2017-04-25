@@ -26,7 +26,7 @@ type (
 		AddressLine2 string `json:"address_line_2"`
 		Locality string `json:"locality"`
 		Region   string `json:"region"`
-		Postcode string `json:"postal_code"`
+		Postalcode string `json:"postal_code"`
 		Country  string `json:"country"`
 		CareOf   string `json:"care_of"`
 		PoBox    string `json:"po_box"`
