@@ -111,7 +111,7 @@ type (
 		RegisteredOfficeIsInDispute         bool   `json:"registered_office_is_in_dispute"`
 
 		RegisteredOfficeAddress      Address        `json:"registered_office_address"`
-		Return                AnnualReturn   `json:"annual_return"`
+		AnnualReturn                AnnualReturn   `json:"annual_return"`
 		ConfirmationStatement AnnualReturn   `json:"confirmation_statement"`
 		Accounts              AnnualAccounts `json:"accounts"`
 		SicCodes              []string       `json:"sic_codes"`
