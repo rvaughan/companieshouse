@@ -102,7 +102,7 @@ type (
 
 		Charges           bool   `json:"has_charges"`
 		InsolvencyHistory bool   `json:"has_insolvency_history"`
-		Cic               bool   `json:"is_community_interest_company"`
+		CIC               bool   `json:"is_community_interest_company"`
 		Jurisdiction      string `json:"jurisdiction"`
 		LastFmList        string `json:"last_full_members_list_date"`
 		Liquidated        bool   `json:"has_been_liquidated"`

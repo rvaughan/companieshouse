@@ -22,8 +22,8 @@ type (
 	// Address struct contains the details of addresses
 	Address struct {
 		Premises string `json:"premises"`
-		Address1 string `json:"address_line_1"`
-		Address2 string `json:"address_line_2"`
+		AddressLine1 string `json:"address_line_1"`
+		AddressLine2 string `json:"address_line_2"`
 		Locality string `json:"locality"`
 		Region   string `json:"region"`
 		Postcode string `json:"postal_code"`
