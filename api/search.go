@@ -92,7 +92,7 @@ type (
 func (d DisqualifiedOfficerSearchResult) DateOfBirthFormatted(s string) string {
 	t, err := time.Parse("2006-01-02T15:04:00", d.DateOfBirth)
 	if err != nil {
-		return nil
+		return ""
 	}
 	return t.Format(s)
 }
