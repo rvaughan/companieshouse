@@ -94,7 +94,7 @@ func (d DisqualifiedOfficerSearchResult) DateOfBirthFormatted(s string) string {
 	if err != nil {
 		return nil
 	}
-	return t.Format("02/01/2006")
+	return t.Format(s)
 }
 
 func (a *API) SearchCompany(q string, i int, s int) (*CompanySearchResults, error) {
