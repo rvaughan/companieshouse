@@ -106,8 +106,8 @@ type (
 		Jurisdiction      string `json:"jurisdiction"`
 		LastFmList        string `json:"last_full_members_list_date"`
 		Liquidated        bool   `json:"has_been_liquidated"`
-		RoUndeliverable   bool   `json:"undeliverable_registered_office_address"`
-		RoDispute         bool   `json:"registered_office_is_in_dispute"`
+		UndeliverableRegisteredOfficeAddress   bool   `json:"undeliverable_registered_office_address"`
+		RegisteredOfficeIsInDispute         bool   `json:"registered_office_is_in_dispute"`
 
 		RegisteredOffice      Address        `json:"registered_office_address"`
 		Return                AnnualReturn   `json:"annual_return"`
