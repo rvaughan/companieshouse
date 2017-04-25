@@ -101,24 +101,24 @@ type (
 		DateOfCessation     string `json:"date_of_cessation"`
 		DateOfCreation      string `json:"date_of_creation"`
 
-		Charges           bool   `json:"has_charges"`
-		InsolvencyHistory bool   `json:"has_insolvency_history"`
-		CIC               bool   `json:"is_community_interest_company"`
+		HasCharges           bool   `json:"has_charges"`
+		HasInsolvencyHistory bool   `json:"has_insolvency_history"`
+		IsCommunityInterestCompany               bool   `json:"is_community_interest_company"`
 		Jurisdiction      string `json:"jurisdiction"`
 		LastFmList        string `json:"last_full_members_list_date"`
 		Liquidated        bool   `json:"has_been_liquidated"`
 		UndeliverableRegisteredOfficeAddress   bool   `json:"undeliverable_registered_office_address"`
 		RegisteredOfficeIsInDispute         bool   `json:"registered_office_is_in_dispute"`
 
-		RegisteredOffice      Address        `json:"registered_office_address"`
+		RegisteredOfficeAddress      Address        `json:"registered_office_address"`
 		Return                AnnualReturn   `json:"annual_return"`
 		ConfirmationStatement AnnualReturn   `json:"confirmation_statement"`
 		Accounts              AnnualAccounts `json:"accounts"`
 		SicCodes              []string       `json:"sic_codes"`
-		PreviousNames         []PreviousName `json:"previous_company_names"`
+		PreviousCompanyNames         []PreviousName `json:"previous_company_names"`
 		Links                 Links          `json:"links"`
-		Branch                Branch         `json:"branch_company_details"`
-		ForeignCompany        ForeignCompany `json:"foreign_company_details"`
+		BranchCompanyDetails                Branch         `json:"branch_company_details"`
+		ForeignCompanyDetails        ForeignCompany `json:"foreign_company_details"`
 	}
 
 )
