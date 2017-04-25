@@ -94,7 +94,7 @@ type (
 		CompanyNumber       string `json:"company_number"`
 		CompanyName         string `json:"company_name"`
 		CanFile             bool   `json:"can_file"`
-		CompanyType         string `json:"type"`
+		Type         string `json:"type"`
 		CompanyStatus       string `json:"company_status"`
 		CompanyStatusDetail string `json:"company_status_detail"`
 		DateOfCessation     string `json:"date_of_cessation"`
