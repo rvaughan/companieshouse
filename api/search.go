@@ -13,7 +13,7 @@ type (
 		Country string `json:"country"`
 		Locality string `json:"locality"`
 		POBox string `json:"po_box"`
-		PostCode string `json:"postal_code"`
+		PostalCode string `json:"postal_code"`
 		Region string `json:"region"`
 	}
 
