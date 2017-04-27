@@ -90,37 +90,36 @@ type (
 
 	// Company struct contains basic company data
 	Company struct {
-		api                 *API `json:"-"`
+		api                 *API   `json:"-"`
 		Etag                string `json:"etag"`
 		CompanyNumber       string `json:"company_number"`
 		CompanyName         string `json:"company_name"`
 		CanFile             bool   `json:"can_file"`
-		Type         string `json:"type"`
+		Type                string `json:"type"`
 		CompanyStatus       string `json:"company_status"`
 		CompanyStatusDetail string `json:"company_status_detail"`
 		DateOfCessation     string `json:"date_of_cessation"`
 		DateOfCreation      string `json:"date_of_creation"`
 
-		HasCharges           bool   `json:"has_charges"`
-		HasInsolvencyHistory bool   `json:"has_insolvency_history"`
-		IsCommunityInterestCompany               bool   `json:"is_community_interest_company"`
-		Jurisdiction      string `json:"jurisdiction"`
-		LastFmList        string `json:"last_full_members_list_date"`
-		Liquidated        bool   `json:"has_been_liquidated"`
-		UndeliverableRegisteredOfficeAddress   bool   `json:"undeliverable_registered_office_address"`
-		RegisteredOfficeIsInDispute         bool   `json:"registered_office_is_in_dispute"`
+		HasCharges                           bool   `json:"has_charges"`
+		HasInsolvencyHistory                 bool   `json:"has_insolvency_history"`
+		IsCommunityInterestCompany           bool   `json:"is_community_interest_company"`
+		Jurisdiction                         string `json:"jurisdiction"`
+		LastFmList                           string `json:"last_full_members_list_date"`
+		Liquidated                           bool   `json:"has_been_liquidated"`
+		UndeliverableRegisteredOfficeAddress bool   `json:"undeliverable_registered_office_address"`
+		RegisteredOfficeIsInDispute          bool   `json:"registered_office_is_in_dispute"`
 
-		RegisteredOfficeAddress      Address        `json:"registered_office_address"`
-		AnnualReturn                AnnualReturn   `json:"annual_return"`
-		ConfirmationStatement AnnualReturn   `json:"confirmation_statement"`
-		Accounts              AnnualAccounts `json:"accounts"`
-		SicCodes              []string       `json:"sic_codes"`
-		PreviousCompanyNames         []PreviousName `json:"previous_company_names"`
-		Links                 Links          `json:"links"`
-		BranchCompanyDetails                Branch         `json:"branch_company_details"`
-		ForeignCompanyDetails        ForeignCompany `json:"foreign_company_details"`
+		RegisteredOfficeAddress Address        `json:"registered_office_address"`
+		AnnualReturn            AnnualReturn   `json:"annual_return"`
+		ConfirmationStatement   AnnualReturn   `json:"confirmation_statement"`
+		Accounts                AnnualAccounts `json:"accounts"`
+		SicCodes                []string       `json:"sic_codes"`
+		PreviousCompanyNames    []PreviousName `json:"previous_company_names"`
+		Links                   Links          `json:"links"`
+		BranchCompanyDetails    Branch         `json:"branch_company_details"`
+		ForeignCompanyDetails   ForeignCompany `json:"foreign_company_details"`
 	}
-
 )
 
 func (c Company) DateOfCreationFormatted(s string) string {

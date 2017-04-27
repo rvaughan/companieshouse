@@ -32,7 +32,7 @@ const (
 	ContentTypeTextPlain = "text/plain; charset=utf-8"
 )
 
-const(
+const (
 	defaultURL         = "https://api.companieshouse.gov.uk"
 	defaultDocumentURL = "https://document-api.companieshouse.gov.uk"
 )
@@ -127,7 +127,7 @@ func (a *API) CallAPI(path string, params QueryParams, fullURL bool, contentType
 	return ioutil.ReadAll(resp.Body)
 }
 
-func CompaniesHouseAPI(key string) *API{
+func CompaniesHouseAPI(key string) *API {
 	api := &API{}
 	api.SetAPIKey(key)
 	return api

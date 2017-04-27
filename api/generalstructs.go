@@ -21,15 +21,15 @@ package companieshouse
 type (
 	// Address struct contains the details of addresses
 	Address struct {
-		Premises string `json:"premises"`
+		Premises     string `json:"premises"`
 		AddressLine1 string `json:"address_line_1"`
 		AddressLine2 string `json:"address_line_2"`
-		Locality string `json:"locality"`
-		Region   string `json:"region"`
-		PostalCode string `json:"postal_code"`
-		Country  string `json:"country"`
-		CareOf   string `json:"care_of"`
-		PoBox    string `json:"po_box"`
+		Locality     string `json:"locality"`
+		Region       string `json:"region"`
+		PostalCode   string `json:"postal_code"`
+		Country      string `json:"country"`
+		CareOf       string `json:"care_of"`
+		PoBox        string `json:"po_box"`
 	}
 
 	// Links struct contains links to additional data and the original object (Self)
