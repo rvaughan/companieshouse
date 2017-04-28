@@ -122,7 +122,7 @@ type (
 		AnnualReturn            AnnualReturn   `json:"annual_return"`
 		ConfirmationStatement   AnnualReturn   `json:"confirmation_statement"`
 		Accounts                Accounts `json:"accounts"`
-		SicCodes                []string       `json:"sic_codes"`
+		SICCodes                []string       `json:"sic_codes"`
 		PreviousCompanyNames    []PreviousName `json:"previous_company_names"`
 		Links                   Links          `json:"links"`
 		BranchCompanyDetails    Branch         `json:"branch_company_details"`
@@ -165,3 +165,5 @@ func (a *API) GetCompany(companyNumber string) (*Company, error) {
 
 	return c, err
 }
+
+// Todo: Format Dates via FuncMap
