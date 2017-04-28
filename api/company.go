@@ -121,7 +121,7 @@ type (
 		RegisteredOfficeAddress Address        `json:"registered_office_address"`
 		AnnualReturn            AnnualReturn   `json:"annual_return"`
 		ConfirmationStatement   AnnualReturn   `json:"confirmation_statement"`
-		Accounts                AnnualAccounts `json:"accounts"`
+		Accounts                Accounts `json:"accounts"`
 		SicCodes                []string       `json:"sic_codes"`
 		PreviousCompanyNames    []PreviousName `json:"previous_company_names"`
 		Links                   Links          `json:"links"`
