@@ -51,7 +51,7 @@ type (
 			Overdue bool `json:"overdue"`
 			PeriodEndOn string `json:"period_end_on"`
 			PeriodStartOn string `json:"period_start_on"`
-		}
+		} `json:"next_accounts"`
 		NextDue      string `json:"next_due"`
 		NextMadeUpTo string `json:"next_made_up_to"`
 		Overdue      bool   `json:"overdue"`
