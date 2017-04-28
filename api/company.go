@@ -39,11 +39,17 @@ type (
 
 	// AnnualAccounts struct contains a company's last and next filing info for the Annual Accounts
 	AnnualAccounts struct {
-		RefDate      RefDate `json:"accounting_reference_date"`
+		AccountingReferenceDate      RefDate `json:"accounting_reference_date"`
 		LastAccounts struct {
 			MadeUpTo string `json:"made_up_to"`
 			Type     string `json:"type"`
 		} `json:"last_accounts"`
+		NextAccounts struct {
+			DueOn string `json:"due_on"`
+			Overdue bool `json:"overdue"`
+			PeriodEndOn string `json:"period_end_on"`
+			PeriodStartOn string `json:"period_start_on"`
+		}
 		NextDue      string `json:"next_due"`
 		NextMadeUpTo string `json:"next_made_up_to"`
 		Overdue      bool   `json:"overdue"`

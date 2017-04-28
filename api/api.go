@@ -132,3 +132,8 @@ func CompaniesHouseAPI(key string) *API {
 	api.SetAPIKey(key)
 	return api
 }
+
+// Todo: Officer Disqualifications
+// Todo: UK Establshment companies
+// Todo: Persons with significant control
+// Todo: Document downloads
