@@ -113,7 +113,7 @@ type (
 		HasInsolvencyHistory                 bool   `json:"has_insolvency_history"`
 		IsCommunityInterestCompany           bool   `json:"is_community_interest_company"`
 		Jurisdiction                         string `json:"jurisdiction"`
-		LastFmList                           string `json:"last_full_members_list_date"`
+		LastFullMemberListDate               string `json:"last_full_members_list_date"`
 		Liquidated                           bool   `json:"has_been_liquidated"`
 		UndeliverableRegisteredOfficeAddress bool   `json:"undeliverable_registered_office_address"`
 		RegisteredOfficeIsInDispute          bool   `json:"registered_office_is_in_dispute"`
