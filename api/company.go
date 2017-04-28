@@ -37,8 +37,8 @@ type (
 		Month string `json:"month"`
 	}
 
-	// AnnualAccounts struct contains a company's last and next filing info for the Annual Accounts
-	AnnualAccounts struct {
+	// Accounts struct contains a company's last and next filing info for the Annual Accounts
+	Accounts struct {
 		AccountingReferenceDate      RefDate `json:"accounting_reference_date"`
 		LastAccounts struct {
 			MadeUpTo string `json:"made_up_to"`
