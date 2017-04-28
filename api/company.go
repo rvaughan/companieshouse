@@ -27,8 +27,8 @@ type (
 	// PreviousName struct contains data of a company's previous names and the time of use
 	PreviousName struct {
 		Name  string `json:"name"`
-		From  string `json:"effective_from"`
-		Until string `json:"ceased_on"`
+		EffectiveFrom  string `json:"effective_from"`
+		CeasedOn string `json:"ceased_on"`
 	}
 
 	// RefDate struct consists of Day and Month
@@ -167,3 +167,4 @@ func (a *API) GetCompany(companyNumber string) (*Company, error) {
 }
 
 // Todo: Format Dates via FuncMap
+// Todo: SIC code description
