@@ -20,6 +20,7 @@ package companieshouse
 
 import (
 	"time"
+	"strings"
 )
 
 type (
@@ -53,7 +54,8 @@ type ChDate struct {
 }
 
 func (cd *ChDate) UnmarshalJSON(b []byte) (err error) {
-	cd.Time, err = time.Parse("2006-01-02", string(b))
+	s := strings.Trim(string(b), "\"")
+	cd.Time, err = time.Parse("2006-01-02", s)
 	return
 }
 
@@ -62,6 +64,9 @@ type DateOfBirth struct {
 }
 
 func (dob *DateOfBirth) UnmarshalJSON(b []byte) (err error) {
-	dob.Time, err = time.Parse("2006-01-02T15:04:00", string(b))
+	s := strings.Trim(string(b), "\"")
+	dob.Time, err = time.Parse("2006-01-02T15:04:00", s)
 	return
 }
+
+// Todo: Remove general struct for links and use links per object to avoid empty parts, which don't belong to the object type
