@@ -146,6 +146,10 @@ func (c Company) DateOfCessationFormatted(s string) string {
 	return t.Format(s)
 }
 
+func (c Company) HasTasks() bool {
+	return c.AnnualReturn != (AnnualReturn{}) || c.ConfirmationStatement != (AnnualReturn{}) || c.Accounts != (Accounts{})
+}
+
 // GetCompany gets the json data for a company from the Companies House REST API
 // and returns a new Company and an error
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
