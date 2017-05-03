@@ -39,7 +39,7 @@ type (
 		Registers        string `json:"registers"`
 		UkEstablishments string `json:"uk_establishments"`
 		DocumentMetaData string `json:"document_metadata"`
-		Document string `json:"document"`
+		Document         string `json:"document"`
 		Self             string `json:"self"`
 	}
 )

@@ -26,27 +26,26 @@ import (
 
 type (
 	ContentType struct {
-		ContentLength int `json:"content_length"`
-		CreatedAt string `json:"created_at"`
-		UpdatedAt string `json:"updated_at"`
+		ContentLength int    `json:"content_length"`
+		CreatedAt     string `json:"created_at"`
+		UpdatedAt     string `json:"updated_at"`
 	}
 
 	DocumentMetaData struct {
-		CompanyNumber string `json:"company_number"`
-		Barcode string `json:"barcode"`
-		SignificantDate string `json:"significan_date"`
+		CompanyNumber       string `json:"company_number"`
+		Barcode             string `json:"barcode"`
+		SignificantDate     string `json:"significan_date"`
 		SignificantDateType string `json:"significan_date_type"`
-		Category string `json:"category"`
-		CreatedAt string `json:"created_at"`
-		Links struct {
-			Self string `json:"self"`
+		Category            string `json:"category"`
+		CreatedAt           string `json:"created_at"`
+		Links               struct {
+			Self     string `json:"self"`
 			Document string `json:"document"`
 		} `json:"links"`
-		Pages int `json:"pages"`
-		Resources []struct{
-			ApplicationPDF ContentType `json:"application/pdf"`
+		Pages     int `json:"pages"`
+		Resources []struct {
+			ApplicationPDF      ContentType `json:"application/pdf"`
 			ApplicationXhtmlXml ContentType `json:"application/xhtml+xml"`
-
 		} `json:"resources"`
 		UpdatedAt string `json:"updated_at"`
 	}

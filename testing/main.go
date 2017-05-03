@@ -18,10 +18,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	d := f.Filings[len(f.Filings) - 1]
+	d := f.Filings[len(f.Filings)-1]
 	err = c.DownloadDocument(&d, "test.pdf")
 	if err != nil {
 		log.Fatal(err)
 	}
 }
-
