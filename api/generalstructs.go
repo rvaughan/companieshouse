@@ -18,6 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package companieshouse
 
+import (
+	"time"
+)
+
 type (
 	// Address struct contains the details of addresses
 	Address struct {
@@ -43,3 +47,21 @@ type (
 		Self             string `json:"self"`
 	}
 )
+
+type ChDate struct {
+	time.Time
+}
+
+func (cd *ChDate) UnmarshalJSON(b []byte) (err error) {
+	cd.Time, err = time.Parse("2006-01-02", string(b))
+	return
+}
+
+type DateOfBirth struct {
+	time.Time
+}
+
+func (dob *DateOfBirth) UnmarshalJSON(b []byte) (err error) {
+	dob.Time, err = time.Parse("2006-01-02T15:04:00", string(b))
+	return
+}

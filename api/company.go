@@ -20,15 +20,14 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"time"
 )
 
 type (
 	// PreviousName struct contains data of a company's previous names and the time of use
 	PreviousName struct {
 		Name          string `json:"name"`
-		EffectiveFrom string `json:"effective_from"`
-		CeasedOn      string `json:"ceased_on"`
+		EffectiveFrom ChDate `json:"effective_from"`
+		CeasedOn      ChDate `json:"ceased_on"`
 	}
 
 	// RefDate struct consists of Day and Month
@@ -43,25 +42,25 @@ type (
 		LastAccounts            struct {
 			MadeUpTo      string `json:"made_up_to"`
 			Type          string `json:"type"`
-			PeriodEndOn   string `json:"period_end_on"`
-			PeriodStartOn string `json:"period_start_on"`
+			PeriodEndOn   ChDate `json:"period_end_on"`
+			PeriodStartOn ChDate `json:"period_start_on"`
 		} `json:"last_accounts"`
 		NextAccounts struct {
 			DueOn         string `json:"due_on"`
 			Overdue       bool   `json:"overdue"`
-			PeriodEndOn   string `json:"period_end_on"`
-			PeriodStartOn string `json:"period_start_on"`
+			PeriodEndOn   ChDate `json:"period_end_on"`
+			PeriodStartOn ChDate `json:"period_start_on"`
 		} `json:"next_accounts"`
-		NextDue      string `json:"next_due"`
-		NextMadeUpTo string `json:"next_made_up_to"`
+		NextDue      ChDate `json:"next_due"`
+		NextMadeUpTo ChDate `json:"next_made_up_to"`
 		Overdue      bool   `json:"overdue"`
 	}
 
 	// AnnualReturn struct contains a company's the last and next filing dates for the Annual Return
 	AnnualReturn struct {
 		LastMadeUpTo string `json:"last_made_up_to"`
-		NextDue      string `json:"next_due"`
-		NextMadeUpTo string `json:"next_made_up_to"`
+		NextDue      ChDate `json:"next_due"`
+		NextMadeUpTo ChDate `json:"next_made_up_to"`
 		Overdue      bool   `json:"overdue"`
 	}
 
@@ -106,14 +105,14 @@ type (
 		Type                string `json:"type"`
 		CompanyStatus       string `json:"company_status"`
 		CompanyStatusDetail string `json:"company_status_detail"`
-		DateOfCessation     string `json:"date_of_cessation"`
-		DateOfCreation      string `json:"date_of_creation"`
+		DateOfCessation     ChDate `json:"date_of_cessation"`
+		DateOfCreation      ChDate `json:"date_of_creation"`
 
 		HasCharges                           bool   `json:"has_charges"`
 		HasInsolvencyHistory                 bool   `json:"has_insolvency_history"`
 		IsCommunityInterestCompany           bool   `json:"is_community_interest_company"`
 		Jurisdiction                         string `json:"jurisdiction"`
-		LastFullMemberListDate               string `json:"last_full_members_list_date"`
+		LastFullMemberListDate               ChDate `json:"last_full_members_list_date"`
 		Liquidated                           bool   `json:"has_been_liquidated"`
 		UndeliverableRegisteredOfficeAddress bool   `json:"undeliverable_registered_office_address"`
 		RegisteredOfficeIsInDispute          bool   `json:"registered_office_is_in_dispute"`
@@ -129,22 +128,6 @@ type (
 		ForeignCompanyDetails   ForeignCompany `json:"foreign_company_details"`
 	}
 )
-
-func (c Company) DateOfCreationFormatted(s string) string {
-	t, err := time.Parse("2006-01-02", c.DateOfCreation)
-	if err != nil {
-		return ""
-	}
-	return t.Format(s)
-}
-
-func (c Company) DateOfCessationFormatted(s string) string {
-	t, err := time.Parse("2006-01-02", c.DateOfCessation)
-	if err != nil {
-		return ""
-	}
-	return t.Format(s)
-}
 
 func (c Company) HasTasks() bool {
 	return c.AnnualReturn != (AnnualReturn{}) || c.ConfirmationStatement != (AnnualReturn{}) || c.Accounts != (Accounts{})
@@ -170,5 +153,4 @@ func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	return c, err
 }
 
-// Todo: Format Dates via FuncMap
 // Todo: SIC code description

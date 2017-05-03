@@ -2,7 +2,6 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"time"
 )
 
 type (
@@ -55,9 +54,9 @@ type (
 
 	DisqualifiedOfficerSearchResult struct {
 		SearchResult
-		DateOfBirth           string   `json:"date_of_birth"`
-		Description           string   `json:"description"`
-		DescriptionIdentifier []string `json:"description_identifier"`
+		DateOfBirth           DateOfBirth `json:"date_of_birth"`
+		Description           string      `json:"description"`
+		DescriptionIdentifier []string    `json:"description_identifier"`
 	}
 
 	SearchResults struct {
@@ -88,14 +87,6 @@ type (
 		Items []DisqualifiedOfficerSearchResult `json:"items"`
 	}
 )
-
-func (d DisqualifiedOfficerSearchResult) DateOfBirthFormatted(s string) string {
-	t, err := time.Parse("2006-01-02T15:04:00", d.DateOfBirth)
-	if err != nil {
-		return ""
-	}
-	return t.Format(s)
-}
 
 func (a *API) SearchCompany(q string, i int, s int) (*CompanySearchResults, error) {
 	r := &CompanySearchResults{}

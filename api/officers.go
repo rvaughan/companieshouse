@@ -24,7 +24,7 @@ import (
 
 type (
 	// DateOfBirth struct consists of Day(int), Month (int) and Year (int)
-	DateOfBirth struct {
+	OfficerDateOfBirth struct {
 		Day   int `json:"day"`
 		Month int `json:"month"`
 		Year  int `json:"year"`
@@ -41,10 +41,10 @@ type (
 
 	// Officer struct contains the data of a company's officers
 	Officer struct {
-		Address            Address     `json:"address"`
-		AppointedOn        string      `json:"appointed_on"`
-		CountryOfResidence string      `json:"country_of_residence"`
-		Dob                DateOfBirth `json:"date_of_birth"`
+		Address            Address            `json:"address"`
+		AppointedOn        string             `json:"appointed_on"`
+		CountryOfResidence string             `json:"country_of_residence"`
+		DateOfBirth        OfficerDateOfBirth `json:"date_of_birth"`
 		FormerNames        []struct {
 			Forenames string `json:"forenames"`
 			Surname   string `json:"surname"`
