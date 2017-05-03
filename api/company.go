@@ -68,8 +68,8 @@ type (
 	// Branch struct contains data of a Branch
 	Branch struct {
 		BusinessActivity    string `json:"business_activity"`
-		ParentCompanyName   string `json:"Parent_company_name"`
-		ParentCompanyNumber string `json:Parent_companyNumber`
+		ParentCompanyName   string `json:"parent_company_name"`
+		ParentCompanyNumber string `json:"parent_company_number"`
 	}
 
 	// ForeignCompany struct contains data of Foreign Companies
