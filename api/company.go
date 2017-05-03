@@ -84,13 +84,13 @@ type (
 				Months string `json:"months"`
 			} `json:"must_file_within"`
 		} `json:"accounts`
-		LegalForm                   string `json:"legal_form"`
-		CompanyType                 string `json:"company_type"`
-		BusinessActivity            string `json:"business_activity"`
-		GovernedBy                  string `json:"governed_by"`
-		IsACreditFinanceInstitution bool   `json:"is_a_credit_finance_institution"`
-		RegistrationNumber          string `json:"registration_number"`
-		OriginatingRegistry         struct {
+		LegalForm                     string `json:"legal_form"`
+		CompanyType                   string `json:"company_type"`
+		BusinessActivity              string `json:"business_activity"`
+		GovernedBy                    string `json:"governed_by"`
+		IsACreditFinancialInstitution bool   `json:"is_a_credit_financial_institution"`
+		RegistrationNumber            string `json:"registration_number"`
+		OriginatingRegistry           struct {
 			Country string `json:"country"`
 			Name    string `json:"name"`
 		} `json:"originating_registry"`
