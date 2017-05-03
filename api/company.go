@@ -26,9 +26,9 @@ import (
 type (
 	// PreviousName struct contains data of a company's previous names and the time of use
 	PreviousName struct {
-		Name  string `json:"name"`
-		EffectiveFrom  string `json:"effective_from"`
-		CeasedOn string `json:"ceased_on"`
+		Name          string `json:"name"`
+		EffectiveFrom string `json:"effective_from"`
+		CeasedOn      string `json:"ceased_on"`
 	}
 
 	// RefDate struct consists of Day and Month
@@ -39,17 +39,17 @@ type (
 
 	// Accounts struct contains a company's last and next filing info for the Annual Accounts
 	Accounts struct {
-		AccountingReferenceDate      RefDate `json:"accounting_reference_date"`
-		LastAccounts struct {
-			MadeUpTo string `json:"made_up_to"`
-			Type     string `json:"type"`
-			PeriodEndOn string `json:"period_end_on"`
+		AccountingReferenceDate RefDate `json:"accounting_reference_date"`
+		LastAccounts            struct {
+			MadeUpTo      string `json:"made_up_to"`
+			Type          string `json:"type"`
+			PeriodEndOn   string `json:"period_end_on"`
 			PeriodStartOn string `json:"period_start_on"`
 		} `json:"last_accounts"`
 		NextAccounts struct {
-			DueOn string `json:"due_on"`
-			Overdue bool `json:"overdue"`
-			PeriodEndOn string `json:"period_end_on"`
+			DueOn         string `json:"due_on"`
+			Overdue       bool   `json:"overdue"`
+			PeriodEndOn   string `json:"period_end_on"`
 			PeriodStartOn string `json:"period_start_on"`
 		} `json:"next_accounts"`
 		NextDue      string `json:"next_due"`
@@ -121,7 +121,7 @@ type (
 		RegisteredOfficeAddress Address        `json:"registered_office_address"`
 		AnnualReturn            AnnualReturn   `json:"annual_return"`
 		ConfirmationStatement   AnnualReturn   `json:"confirmation_statement"`
-		Accounts                Accounts `json:"accounts"`
+		Accounts                Accounts       `json:"accounts"`
 		SICCodes                []string       `json:"sic_codes"`
 		PreviousCompanyNames    []PreviousName `json:"previous_company_names"`
 		Links                   Links          `json:"links"`

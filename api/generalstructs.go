@@ -38,7 +38,8 @@ type (
 		PscStatements    string `json:"persons_with_significant_control_statements`
 		Registers        string `json:"registers"`
 		UkEstablishments string `json:"uk_establishments"`
-		Document         string `json:"document_metadata"`
+		DocumentMetaData string `json:"document_metadata"`
+		Document string `json:"document"`
 		Self             string `json:"self"`
 	}
 )

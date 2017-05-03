@@ -1,21 +1,27 @@
 package main
 
 import (
-
-)
-import (
 	"github.com/BalkanTech/companieshouse/api"
-	"os"
-	"fmt"
 	"log"
+	"os"
 )
 
 func main() {
 	ch := companieshouse.CompaniesHouseAPI(os.Getenv("CH_API_KEY"))
-	r, err := ch.Search("51 Portland Road", 0, 0)
+	c, err := ch.GetCompany("09999801")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%+v\n", *r)
+
+	f, err := c.GetFilings()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	d := f.Filings[len(f.Filings) - 1]
+	err = c.DownloadDocument(&d, "test.pdf")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 

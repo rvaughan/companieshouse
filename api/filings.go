@@ -20,10 +20,37 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
+	"io/ioutil"
 )
 
 type (
+	ContentType struct {
+		ContentLength int `json:"content_length"`
+		CreatedAt string `json:"created_at"`
+		UpdatedAt string `json:"updated_at"`
+	}
+
+	DocumentMetaData struct {
+		CompanyNumber string `json:"company_number"`
+		Barcode string `json:"barcode"`
+		SignificantDate string `json:"significan_date"`
+		SignificantDateType string `json:"significan_date_type"`
+		Category string `json:"category"`
+		CreatedAt string `json:"created_at"`
+		Links struct {
+			Self string `json:"self"`
+			Document string `json:"document"`
+		} `json:"links"`
+		Pages int `json:"pages"`
+		Resources []struct{
+			ApplicationPDF ContentType `json:"application/pdf"`
+			ApplicationXhtmlXml ContentType `json:"application/xhtml+xml"`
+
+		} `json:"resources"`
+		UpdatedAt string `json:"updated_at"`
+	}
+
 	// Filing contains the data of a company's filing
 	Filing struct {
 		Annotations []struct {
@@ -68,19 +95,48 @@ type (
 	}
 )
 
-// GetDownloadURL returns the download URL for a document related to a company's filing
-// and returns a string with the url and an error
-func (c *Company) GetDownloadURL(f *Filing) (string, error) {
-	resp, err := c.api.getResponse(f.Links.Document+"/content", nil, ContentTypePDF)
+// GetFile gets a Filing's document's content and returns the document content as a slice of bytes or returns an error
+func (c *Company) GetDocument(f *Filing) ([]byte, error) {
+	url := f.Links.DocumentMetaData
+	resp, err := c.api.getResponse(url, "GET", nil, ContentTypePDF)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	if len(resp.Header.Get("Location")) == 0 {
-		return "", errors.New("Response's header has no Location")
+	m := &DocumentMetaData{}
+	json.NewDecoder(resp.Body).Decode(m)
+	resp.Body.Close()
+
+	fmt.Printf("%s %+v\n\n", resp.Status, m)
+	//fmt.Println("ID;", m.ID)
+
+	resp, err = c.api.getResponse(m.Links.Document, "GET", nil, ContentTypePDF)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
 	}
 
-	return resp.Header.Get("Location"), err
+	return b, nil
+}
+
+// OpenFile download a Filing's document's content and returns an error
+func (c *Company) DownloadDocument(f *Filing, p string) error {
+	b, err := c.GetDocument(f)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(p, b, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetFilings gets the json data for a company's filing hisotry from the Companies House REST API

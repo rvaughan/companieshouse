@@ -26,12 +26,12 @@ const testOK = "\u2713"
 const testFailed = "\u2717"
 
 func TestGetFromPath(t *testing.T) {
-	var tests = []struct{
-		path string
-		element int
-		expected string
+	var tests = []struct {
+		path         string
+		element      int
+		expected     string
 		expect_error bool
-	} {
+	}{
 		{"/company/09999801", CompanyNumber, "09999801", false},
 		{"/company/09999801/officers", CompanyNumber, "09999801", false},
 		{"/company", CompanyNumber, "", true},

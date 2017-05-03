@@ -64,8 +64,8 @@ func (a *API) constructURL(path string) string {
 	return a.apiURL + path
 }
 
-func (a *API) prepareRequest(url string) (*http.Request, error) {
-	req, err := http.NewRequest("GET", url, nil)
+func (a *API) prepareRequest(url string, method string) (*http.Request, error) {
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		return req, err
 	}
@@ -74,12 +74,12 @@ func (a *API) prepareRequest(url string) (*http.Request, error) {
 	return req, err
 }
 
-func (a *API) getResponse(url string, params QueryParams, contentType string) (*http.Response, error) {
+func (a *API) getResponse(url string, method string, params QueryParams, contentType string) (*http.Response, error) {
 	if a.overWriteDefaultURL {
 		url = strings.Replace(url, defaultURL, a.apiURL, -1)
 		url = strings.Replace(url, defaultDocumentURL, a.apiURL, -1)
 	}
-	req, err := a.prepareRequest(url)
+	req, err := a.prepareRequest(url, method)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func (a *API) CallAPI(path string, params QueryParams, fullURL bool, contentType
 		contentType = ContentTypeJSON
 	}
 
-	resp, err := a.getResponse(url, params, contentType)
+	resp, err := a.getResponse(url, "GET", params, contentType)
 	if err != nil {
 		return []byte{}, err
 	}

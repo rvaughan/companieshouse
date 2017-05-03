@@ -19,23 +19,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package testhandlers
 
 import (
-	"net/http"
 	"encoding/json"
-	"fmt"
-	"regexp"
 	"errors"
+	"fmt"
+	"net/http"
+	"regexp"
 )
 
 const (
-	CompanyNumber  int = 2
-	ContentTypeJSON = "application/json"
-	ContentTypePDF = "application/pdf"
-	ContentTypeTextPlain = "text/plain; charset=utf-8"
+	CompanyNumber        int = 2
+	ContentTypeJSON          = "application/json"
+	ContentTypePDF           = "application/pdf"
+	ContentTypeTextPlain     = "text/plain; charset=utf-8"
 )
 
 func getFromPath(p string, e int) (string, error) {
 	s := regexp.MustCompile("//*").Split(p, -1)
-	if len(s) -1 < e{
+	if len(s)-1 < e {
 		return "", errors.New("Not existing")
 	}
 	return s[e], nil
@@ -63,9 +63,9 @@ func GetResponseHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetResponse(n string, d map[string]string) (string, bool){
+func GetResponse(n string, d map[string]string) (string, bool) {
 	c, ok := d[n]
-	return c,ok
+	return c, ok
 }
 
 var NotFoundResponse string = `{
@@ -77,7 +77,7 @@ var NotFoundResponse string = `{
   ]
 }`
 
-var NotAuthenticatedResponse string =  `{
+var NotAuthenticatedResponse string = `{
   "errors": [
     {
       "type": "ch:service",

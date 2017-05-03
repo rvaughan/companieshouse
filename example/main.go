@@ -1,24 +1,24 @@
 package main
 
 import (
-	"net/http"
 	"fmt"
-	"html/template"
-	"os"
 	"github.com/BalkanTech/companieshouse/api"
 	"github.com/gorilla/mux"
+	"html/template"
 	"log"
+	"net/http"
+	"os"
 )
 
 type Alert struct {
-	Title string
-	Class string
+	Title   string
+	Class   string
 	Message string
 }
 
 type Data struct {
 	Alerts []Alert
-	Data map[string]interface{}
+	Data   map[string]interface{}
 }
 
 func newData() *Data {
@@ -41,7 +41,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	data := newData()
 	t, err := template.ParseFiles("templates/base.html", "templates/root.html")
 	if err != nil {
-		fmt.Fprintf(w,"Error while parsing template: %s", err.Error())
+		fmt.Fprintf(w, "Error while parsing template: %s", err.Error())
 		return
 	}
 
@@ -88,7 +88,7 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 	data := newData()
 	t, err := template.ParseFiles("templates/base.html", "templates/company.html")
 	if err != nil {
-		fmt.Fprintf(w,"Error while parsing template: %s", err.Error())
+		fmt.Fprintf(w, "Error while parsing template: %s", err.Error())
 		return
 	}
 
@@ -135,4 +135,3 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 
 	t.ExecuteTemplate(w, "base", data)
 }
-
