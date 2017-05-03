@@ -84,6 +84,7 @@ type (
 				Months string `json:"months"`
 			} `json:"must_file_within"`
 		} `json:"accounts`
+		LegalForm                   string `json:"legal_form"`
 		CompanyType                 string `json:"company_type"`
 		BusinessActivity            string `json:"business_activity"`
 		GovernedBy                  string `json:"governed_by"`
