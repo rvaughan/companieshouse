@@ -1,0 +1,138 @@
+{{ define "content" }}
+
+<div class="row">
+    <form action="/" method="post">
+        <div class="col-lg-offset-3 col-lg-6">
+            <h2>Search</h2>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search for..." name="SearchText">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </span>
+            </div>
+
+            <div class="text-center">
+                <label class="radio-inline">
+                    <input type="radio" name="SearchFor" id="inlineRadio1" value="C" checked> Companies
+                </label>
+
+                <label class="radio-inline">
+                    <input type="radio" name="SearchFor" id="inlineRadio2" value="O"> Officers
+                </label>
+
+                <label class="radio-inline">
+                    <input type="radio" name="SearchFor" id="inlineRadio3" value="D"> Disqualified officers
+                </label>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+{{ if .Data.Companies.Items }}
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Companies</h3>
+        <div class="table-responsive">
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Number</th>
+                        <th>Address</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{ range $i, $item := .Data.Companies.Items }}
+                        <tr>
+                            <td>
+                                {{ $item.Title }}
+                                {{ if and (not $item.Matches.Title) ($item.Matches.Snippet) }}
+                                    <span class="label label-warning">Previous name: {{ $item.Snippet }}</span>
+                                {{ end }}
+                            </td>
+                            <td>{{ $item.CompanyNumber }}</td>
+                            <td><small>{{ $item.AddressSnippet }}</small></td>
+                            <td>{{ $item.CompanyType }}</td>
+                            <td><span class="label {{ if or (eq $item.CompanyStatus "active") (eq $item.CompanyStatus "open") }}label-success{{else}}{{if eq $item.CompanyStatus "dissolved"}}label-danger{{else}}label-primary{{end}}{{end}}">{{ $item.CompanyStatus }}</span></td>
+                            <td><a href="/company/{{ $item.CompanyNumber }}" class="btn btn-primary btn-xs">&nbsp;&nbsp;&nbsp;<i class="fa fa-eye fa-fw" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;</a></td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{{ end }}
+
+{{ if .Data.Officers.Items }}
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Officers</h3>
+        <div class="table-responsive">
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Date of birth</th>
+                        <th>Appointments</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{ range $i, $item := .Data.Officers.Items }}
+                        <tr>
+                            <td>{{ $item.Title }}</td>
+                            <td><small>{{ $item.AddressSnippet }}</small></td>
+                            <td>
+                                {{ if and (ne $item.DateOfBirth.Month 0 ) (ne $item.DateOfBirth.Year 0) }}
+                                    <strong>**</strong>/{{ $item.DateOfBirth.Month }}/{{ $item.DateOfBirth.Year }}
+                                {{ end }}
+                            </td>
+                            <td>{{ $item.AppointmentCount }}</td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{{ end }}
+
+{{ if .Data.DisqOfficers.Items }}
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Disqualified officers</h3>
+        <div class="table-responsive">
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Date of birth</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {{ range $i, $item := .Data.DisqOfficers.Items }}
+                        <tr>
+                            <td>{{ $item.Title }}</td>
+                            <td><small>{{ $item.AddressSnippet }}</small></td>
+                            <td>{{ $item.DateOfBirth.Formatted "02/01/2006" }}</td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{{ end }}
+
+{{ end }}
