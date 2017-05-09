@@ -70,6 +70,7 @@ type (
 		ItemsPerPage  int       `json:"items_per_page"`
 		TotalResults  int       `json:"total_results"`
 		ActiveCount   int       `json:"active_count"`
+		InactiveCount int       `json:"inactive_count"`
 		ResignedCount int       `json:"resigned_count"`
 		Officers      []Officer `json:"items"`
 		Links         struct {
