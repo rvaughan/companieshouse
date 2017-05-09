@@ -86,7 +86,11 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 func companyHandler(w http.ResponseWriter, r *http.Request) {
 	data := newData()
-	t, err := template.ParseFiles("templates/base.html", "templates/company.html")
+	t, err := template.ParseFiles(
+		"templates/base.html",
+		"templates/company.html",
+		"templates/tab_general.html",
+	)
 	if err != nil {
 		fmt.Fprintf(w, "Error while parsing template: %s", err.Error())
 		return
