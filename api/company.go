@@ -74,8 +74,8 @@ type (
 	// ForeignCompany struct contains data of Foreign Companies
 	ForeignCompanyDetails struct {
 		AccountingRequirement struct {
-			AccountType string `json:"foreign_account_type"`
-			Terms       string `json:"terms_of_account_publication"`
+			ForeignAccountType        string `json:"foreign_account_type"`
+			TermsOfAccountPublication string `json:"terms_of_account_publication"`
 		} `json:"accounting_requirement"`
 		Accounts struct {
 			From RefDate `json:"account_period_from"`
