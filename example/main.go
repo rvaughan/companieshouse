@@ -90,6 +90,7 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/base.html",
 		"templates/company.html",
 		"templates/tab_general.html",
+		"templates/tab_officers.html",
 	)
 	if err != nil {
 		fmt.Fprintf(w, "Error while parsing template: %s", err.Error())

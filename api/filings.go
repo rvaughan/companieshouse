@@ -20,7 +20,6 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 )
 
@@ -105,9 +104,6 @@ func (c *Company) GetDocument(f *Filing) ([]byte, error) {
 	m := &DocumentMetaData{}
 	json.NewDecoder(resp.Body).Decode(m)
 	resp.Body.Close()
-
-	fmt.Printf("%s %+v\n\n", resp.Status, m)
-	//fmt.Println("ID;", m.ID)
 
 	resp, err = c.api.getResponse(m.Links.Document, "GET", nil, ContentTypePDF)
 	if err != nil {

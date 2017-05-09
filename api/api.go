@@ -135,5 +135,4 @@ func CompaniesHouseAPI(key string) *API {
 
 // Todo: Officer Disqualifications
 // Todo: UK Establshment companies
-// Todo: Persons with significant control
-// Todo: Document downloads
+// Todo: People with significant control

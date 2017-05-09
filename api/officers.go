@@ -42,7 +42,7 @@ type (
 	// Officer struct contains the data of a company's officers
 	Officer struct {
 		Address            Address            `json:"address"`
-		AppointedOn        string             `json:"appointed_on"`
+		AppointedOn        ChDate             `json:"appointed_on"`
 		CountryOfResidence string             `json:"country_of_residence"`
 		DateOfBirth        OfficerDateOfBirth `json:"date_of_birth"`
 		FormerNames        []struct {
@@ -59,7 +59,7 @@ type (
 		Nationality string `json:"nationality"`
 		Occupation  string `json:"occupation"`
 		Role        string `json:"officer_role"`
-		ResignedOn  string `json:"resigned_on"`
+		ResignedOn  ChDate `json:"resigned_on"`
 	}
 
 	// OfficerResponse contains the server response of a data request to the companies house API
@@ -84,13 +84,13 @@ func (c *Company) GetOfficers() (*OfficerResponse, error) {
 	officers := &OfficerResponse{}
 	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/officers", nil, false, ContentTypeJSON)
 	if err != nil {
-		return officers, err
+		return nil, err
 	}
 
 	err = json.Unmarshal(resp, &officers)
 	if err != nil {
-		return officers, err
+		return nil, err
 	}
 
-	return officers, err
+	return officers, nil
 }

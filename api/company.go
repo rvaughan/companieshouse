@@ -135,7 +135,7 @@ func (c Company) HasTasks() bool {
 // GetCompany gets the json data for a company from the Companies House REST API
 // and returns a new Company and an error
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
-	c := &Company{}
+	c := &Company{api: a}
 
 	resp, err := a.CallAPI("/company/"+companyNumber, nil, false, ContentTypeJSON)
 	if err != nil {
@@ -146,8 +146,6 @@ func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	c.api = a
 
 	return c, err
 }
