@@ -64,15 +64,15 @@ type (
 
 	// OfficerResponse contains the server response of a data request to the companies house API
 	OfficerResponse struct {
-		Etag               string    `json:"etag"`
-		Kind               string    `json:"kind"`
-		Start              int       `json:"start_index"`
-		ItemsPerPage       int       `json:"items_per_page"`
-		TotalResults       int       `json:"total_results"`
-		ActiveAppointments int       `json:"active_count"`
-		Resignations       int       `json:"resigned_count"`
-		Officers           []Officer `json:"items"`
-		Links              struct {
+		Etag          string    `json:"etag"`
+		Kind          string    `json:"kind"`
+		Start         int       `json:"start_index"`
+		ItemsPerPage  int       `json:"items_per_page"`
+		TotalResults  int       `json:"total_results"`
+		ActiveCount   int       `json:"active_count"`
+		ResignedCount int       `json:"resigned_count"`
+		Officers      []Officer `json:"items"`
+		Links         struct {
 			self string `json:"self"`
 		} `json:"Links"`
 	}
