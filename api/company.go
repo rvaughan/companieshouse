@@ -76,7 +76,7 @@ type (
 		AccountingRequirement struct {
 			AccountType string `json:"foreign_account_type"`
 			Terms       string `json:"terms_of_account_publication"`
-		}
+		} `json:"accounting_requirement"`
 		Accounts struct {
 			From RefDate `json:"account_period_from"`
 			To   RefDate `json:"account_period_to"`
