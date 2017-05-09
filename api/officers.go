@@ -58,7 +58,7 @@ type (
 		Name        string `json:"name"`
 		Nationality string `json:"nationality"`
 		Occupation  string `json:"occupation"`
-		Role        string `json:"officer_role"`
+		OfficerRole        string `json:"officer_role"`
 		ResignedOn  ChDate `json:"resigned_on"`
 	}
 
