@@ -72,7 +72,7 @@ type (
 		ActiveCount   int       `json:"active_count"`
 		InactiveCount int       `json:"inactive_count"`
 		ResignedCount int       `json:"resigned_count"`
-		Officers      []Officer `json:"items"`
+		Items         []Officer `json:"items"`
 		Links         struct {
 			self string `json:"self"`
 		} `json:"Links"`
