@@ -162,15 +162,8 @@ func (a *API) getCompany(companyNumber string, c *Company) <-chan error {
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{api: a}
 	ce := a.getCompany(companyNumber, c)
-	if err := <-ce; err != nil {
-		return nil, err
-	}
 
 	o, oe := c.GetOfficers()
-	c.Officers = <-o
-	if err := <-oe; err != nil {
-		return nil, err
-	}
 
 	if c.HasCharges {
 		ch, ce := c.GetCharges()
@@ -178,7 +171,6 @@ func (a *API) GetCompany(companyNumber string) (*Company, error) {
 		if err := <-ce; err != nil {
 			return nil, err
 		}
-
 	}
 
 	if c.HasInsolvencyHistory {
@@ -188,6 +180,17 @@ func (a *API) GetCompany(companyNumber string) (*Company, error) {
 			return nil, err
 		}
 	}
+
+	// Get results
+	if err := <-ce; err != nil {
+		return nil, err
+	}
+
+	c.Officers = <-o
+	if err := <-oe; err != nil {
+		return nil, err
+	}
+
 	return c, nil
 }
 

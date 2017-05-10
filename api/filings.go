@@ -20,8 +20,8 @@ package companieshouse
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"github.com/pkg/errors"
+	"io/ioutil"
 )
 
 type (
@@ -84,13 +84,13 @@ type (
 
 	// FilingResponse contains the server response of a data request to the companies house API
 	FilingResponse struct {
-		Etag         string   `json:"etag"`
-		Kind         string   `json:"kind"`
-		Start        int      `json:"start_index"`
-		ItemsPerPage int      `json:"items_per_page"`
-		TotalResults int      `json:"total_results"`
-		Status       string   `json:"filing_history_status"`
-		Items      []*Filing `json:"items"`
+		Etag                string    `json:"etag"`
+		FilingHistoryStatus string    `json:"filing_history_status"`
+		Kind                string    `json:"kind"`
+		StartIndex          int       `json:"start_index"`
+		ItemsPerPage        int       `json:"items_per_page"`
+		TotalCount          int       `json:"total_count"`
+		Items               []*Filing `json:"items"`
 	}
 )
 
