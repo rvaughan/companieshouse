@@ -21,6 +21,7 @@ package companieshouse
 import (
 	"encoding/json"
 	"io/ioutil"
+	"github.com/pkg/errors"
 )
 
 type (
@@ -56,7 +57,7 @@ type (
 			Date        string `json:"date"`
 			Description string `json:"description"`
 		} `json:"annotations"`
-		Associated []struct {
+		AssociatedFilings []struct {
 			Type        string `json:"type"`
 			Date        string `json:"date"`
 			Description string `json:"description"`
@@ -64,7 +65,7 @@ type (
 		Barcode     string `json:"barcode"`
 		Category    string `json:"category"`
 		Subcategory string `json:"subcategory"`
-		Date        string `json:"date"`
+		Date        ChDate `json:"date"`
 		Description string `json:"description"`
 		Links       Links  `json:"links"`
 		Pages       int    `json:"pages"`
@@ -89,7 +90,7 @@ type (
 		ItemsPerPage int      `json:"items_per_page"`
 		TotalResults int      `json:"total_results"`
 		Status       string   `json:"filing_history_status"`
-		Filings      []Filing `json:"items"`
+		Items      []*Filing `json:"items"`
 	}
 )
 
@@ -140,13 +141,28 @@ func (c *Company) GetFilings() (*FilingResponse, error) {
 	filings := &FilingResponse{}
 	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/filing-history", nil, false, ContentTypeJSON)
 	if err != nil {
-		return filings, err
+		return nil, err
 	}
 
 	err = json.Unmarshal(resp, &filings)
 	if err != nil {
-		return filings, err
+		return nil, err
 	}
 
 	return filings, err
+}
+
+// GetFiling
+func (c *Company) GetFiling(tid string) (*Filing, error) {
+	filings, err := c.GetFilings()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, f := range filings.Items {
+		if f.TransactionID == tid {
+			return f, nil
+		}
+	}
+	return nil, errors.New("Not found")
 }

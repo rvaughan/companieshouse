@@ -58,7 +58,7 @@ type (
 		Name        string `json:"name"`
 		Nationality string `json:"nationality"`
 		Occupation  string `json:"occupation"`
-		OfficerRole        string `json:"officer_role"`
+		OfficerRole string `json:"officer_role"`
 		ResignedOn  ChDate `json:"resigned_on"`
 	}
 
@@ -72,7 +72,7 @@ type (
 		ActiveCount   int       `json:"active_count"`
 		InactiveCount int       `json:"inactive_count"`
 		ResignedCount int       `json:"resigned_count"`
-		Items         []Officer `json:"items"`
+		Items         []*Officer `json:"items"`
 		Links         struct {
 			self string `json:"self"`
 		} `json:"Links"`
@@ -81,7 +81,7 @@ type (
 
 // GetOfficers gets the json data for a company's officers from the Companies House REST API
 // and returns a new OfficersResponse and an error
-func (c *Company) GetOfficers() (*OfficerResponse, error) {
+func (c *Company) getOfficers() (*OfficerResponse, error) {
 	officers := &OfficerResponse{}
 	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/officers", nil, false, ContentTypeJSON)
 	if err != nil {
@@ -94,4 +94,28 @@ func (c *Company) GetOfficers() (*OfficerResponse, error) {
 	}
 
 	return officers, nil
+}
+
+func (c *Company) GetOfficers() (<-chan *OfficerResponse, <-chan error) {
+	r := make(chan *OfficerResponse, 1)
+	e := make(chan error, 1)
+
+	go func() {
+		officers := &OfficerResponse{}
+			resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/officers", nil, false, ContentTypeJSON)
+		if err != nil {
+			e <- err
+		}
+
+		err = json.Unmarshal(resp, &officers)
+		if err != nil {
+			e <- err
+		}
+		r <- officers
+		e <- nil
+		close(r)
+		close(e)
+	}()
+
+	return r, e
 }

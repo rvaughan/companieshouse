@@ -125,6 +125,10 @@ type (
 		Links                                Links                 `json:"links"`
 		BranchCompanyDetails                 Branch                `json:"branch_company_details"`
 		ForeignCompanyDetails                ForeignCompanyDetails `json:"foreign_company_details"`
+
+		Officers          *OfficerResponse           `json:"-"`
+		Charges           *ChargesResponse           `json:"-"`
+		InsolvencyHistory *InsolvencyHistoryResponse `json:"-"`
 	}
 )
 
@@ -147,7 +151,29 @@ func (a *API) GetCompany(companyNumber string) (*Company, error) {
 		return nil, err
 	}
 
-	return c, err
+	o, oe := c.GetOfficers()
+	c.Officers = <-o
+	if err := <-oe; err != nil {
+		return nil, err
+	}
+
+	if c.HasCharges {
+		ch, ce := c.GetCharges()
+		c.Charges = <-ch
+		if err := <-ce; err != nil {
+			return nil, err
+		}
+
+	}
+
+	if c.HasInsolvencyHistory {
+		i, ie := c.GetInsolvencyHistory()
+		c.InsolvencyHistory = <-i
+		if err := <-ie; err != nil {
+			return nil, err
+		}
+	}
+	return c, nil
 }
 
 // Todo: SIC code description

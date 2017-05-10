@@ -42,17 +42,17 @@ type (
 	}
 
 	// InsolvenciesResponse contains the server response of a data request to the companies house API
-	InsolvenciesResponse struct {
+	InsolvencyHistoryResponse struct {
 		Etag   string       `json:"etag"`
 		Status []string     `json:"status"`
-		Cases  []Insolvency `json:"cases"`
+		Cases  []*Insolvency `json:"cases"`
 	}
 )
 
 // GetInsolvencyDetails gets the json data for a company's insolvency details from the Companies House REST API
 // and returns a new InsolvenciesResponse and an error
-func (c *Company) GetInsolvencyDetails() (*InsolvenciesResponse, error) {
-	insolvencies := &InsolvenciesResponse{}
+func (c *Company) GetInsolvencyDetails() (*InsolvencyHistoryResponse, error) {
+	insolvencies := &InsolvencyHistoryResponse{}
 	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", nil, false, ContentTypeJSON)
 	if err != nil {
 		return insolvencies, err
@@ -63,4 +63,28 @@ func (c *Company) GetInsolvencyDetails() (*InsolvenciesResponse, error) {
 		return insolvencies, err
 	}
 	return insolvencies, err
+}
+
+func (c *Company) GetInsolvencyHistory() (<-chan *InsolvencyHistoryResponse, <-chan error) {
+	r := make(chan *InsolvencyHistoryResponse, 1)
+	e := make(chan error, 1)
+
+	go func() {
+		ih := &InsolvencyHistoryResponse{}
+		resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", nil, false, ContentTypeJSON)
+		if err != nil {
+			e <- err
+		}
+
+		err = json.Unmarshal(resp, &ih)
+		if err != nil {
+			e <- err
+		}
+		r <- ih
+		e <- nil
+		close(r)
+		close(e)
+	}()
+
+	return r, e
 }

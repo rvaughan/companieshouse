@@ -92,13 +92,13 @@ type (
 		Satisfied     int      `json:"satisfied_count"`
 		Total         int      `json:"total_count"`
 		Unfiletered   int      `json:"unfiletered_count"`
-		Charges       []Charge `json:"items"`
+		Charges       []*Charge `json:"items"`
 	}
 )
 
 // GetCharges gets the json data for a company's charges from the Companies House REST API
 // and returns a new ChargesResponse and an error
-func (c *Company) GetCharges() (*ChargesResponse, error) {
+func (c *Company) getCharges() (*ChargesResponse, error) {
 	charges := &ChargesResponse{}
 
 	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/charges", nil, false, ContentTypeJSON)
@@ -112,4 +112,28 @@ func (c *Company) GetCharges() (*ChargesResponse, error) {
 	}
 
 	return charges, err
+}
+
+func (c *Company) GetCharges() (<-chan *ChargesResponse, <-chan error) {
+	r := make(chan *ChargesResponse, 1)
+	e := make(chan error, 1)
+	go func() {
+		charges := &ChargesResponse{}
+
+		resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/charges", nil, false, ContentTypeJSON)
+		if err != nil {
+			e <- err
+		}
+
+		err = json.Unmarshal(resp, charges)
+		if err != nil {
+			e <- err
+		}
+		r <- charges
+		e <- nil
+		close(r)
+		close (e)
+	}()
+
+	return r, e
 }
