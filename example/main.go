@@ -93,6 +93,7 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/company.html",
 		"templates/tab_general.html",
 		"templates/tab_officers.html",
+		"templates/tab_filings.html",
 	)
 	if err != nil {
 		fmt.Fprintf(w, "Error while parsing template: %s", err.Error())
@@ -110,34 +111,6 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 		data.Alerts = append(data.Alerts, Alert{"Error", "alert-danger", err.Error()})
 	} else {
 		data.Data["Company"] = *company
-
-		/*officers, err := company.GetOfficers()
-		if err == nil {
-			data.Data["Officers"] = *officers
-		} else {
-			log.Println("Error when getting officers:", err)
-		}
-
-		filings, err := company.GetFilings()
-		if err == nil {
-			data.Data["Filings"] = *filings
-		} else {
-			log.Println("Error when getting filings:", err)
-		}
-
-		charges, err := company.GetCharges()
-		if err == nil {
-			data.Data["Charges"] = *charges
-		} else {
-			log.Println("Error when getting charges:", err)
-		}
-
-		insolvencyDetails, err := company.GetInsolvencyDetails()
-		if err == nil {
-			data.Data["InsolvencyDetails"] = *insolvencyDetails
-		} else {
-			log.Println("Error while getting insolvency details:", err)
-		} */
 	}
 
 	t.ExecuteTemplate(w, "base", data)

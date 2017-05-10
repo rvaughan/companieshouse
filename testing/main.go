@@ -15,18 +15,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	/*f, err := c.GetFilings()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	d := f.Items[len(f.Items)-1]
-	err = c.DownloadDocument(d, "test.pdf")
-	if err != nil {
-		log.Fatal(err)
-	}*/
-
 	log.Printf("Request took: %s", time.Since(now))
+	log.Println(c.CompanyName)
 	log.Println(c.Officers)
 	log.Println(c.Charges)
 	log.Println(c.InsolvencyHistory)

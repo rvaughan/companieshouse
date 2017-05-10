@@ -136,18 +136,33 @@ func (c Company) HasTasks() bool {
 	return c.AnnualReturn != (AnnualReturn{}) || c.ConfirmationStatement != (AnnualReturn{}) || c.Accounts != (Accounts{})
 }
 
+func (a *API) getCompany(companyNumber string, c *Company) <-chan error {
+	e := make(chan error, 1)
+	c.CompanyNumber = companyNumber
+
+	go func() {
+		resp, err := a.CallAPI("/company/"+companyNumber, nil, false, ContentTypeJSON)
+		if err != nil {
+			e <- err
+		}
+
+		err = json.Unmarshal(resp, &c)
+		if err != nil {
+			e <- err
+		}
+		e <- nil
+		close(e)
+	}()
+
+	return e
+}
+
 // GetCompany gets the json data for a company from the Companies House REST API
 // and returns a new Company and an error
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{api: a}
-
-	resp, err := a.CallAPI("/company/"+companyNumber, nil, false, ContentTypeJSON)
-	if err != nil {
-		return c, err
-	}
-
-	err = json.Unmarshal(resp, &c)
-	if err != nil {
+	ce := a.getCompany(companyNumber, c)
+	if err := <-ce; err != nil {
 		return nil, err
 	}
 
