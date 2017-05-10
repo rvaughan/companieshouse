@@ -135,9 +135,33 @@ func (c *Company) DownloadDocument(f *Filing, p string) error {
 	return nil
 }
 
+func (c *Company) GetFilings() (<-chan *FilingResponse, <-chan error) {
+	r := make(chan *FilingResponse, 1)
+	e := make(chan error, 1)
+	go func() {
+		f := &FilingResponse{}
+
+		resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/filing-history", nil, false, ContentTypeJSON)
+		if err != nil {
+			e <- err
+		}
+
+		err = json.Unmarshal(resp, f)
+		if err != nil {
+			e <- err
+		}
+		r <- f
+		e <- nil
+		close(r)
+		close (e)
+	}()
+
+	return r, e
+}
+
 // GetFilings gets the json data for a company's filing hisotry from the Companies House REST API
 // and returns a new FilingResponse and an error
-func (c *Company) GetFilings() (*FilingResponse, error) {
+func (c *Company) getFilings() (*FilingResponse, error) {
 	filings := &FilingResponse{}
 	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/filing-history", nil, false, ContentTypeJSON)
 	if err != nil {
@@ -154,12 +178,7 @@ func (c *Company) GetFilings() (*FilingResponse, error) {
 
 // GetFiling
 func (c *Company) GetFiling(tid string) (*Filing, error) {
-	filings, err := c.GetFilings()
-	if err != nil {
-		return nil, err
-	}
-
-	for _, f := range filings.Items {
+	for _, f := range c.Filings.Items {
 		if f.TransactionID == tid {
 			return f, nil
 		}

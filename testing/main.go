@@ -18,6 +18,7 @@ func main() {
 	log.Printf("Request took: %s", time.Since(now))
 	log.Println(c.CompanyName)
 	log.Println(c.Officers)
+	log.Println(c.Filings)
 	log.Println(c.Charges)
 	log.Println(c.InsolvencyHistory)
 }

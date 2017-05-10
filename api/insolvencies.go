@@ -70,20 +70,27 @@ func (c *Company) GetInsolvencyHistory() (<-chan *InsolvencyHistoryResponse, <-c
 	e := make(chan error, 1)
 
 	go func() {
-		ih := &InsolvencyHistoryResponse{}
-		resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", nil, false, ContentTypeJSON)
-		if err != nil {
-			e <- err
-		}
+		if !c.HasInsolvencyHistory {
+			r <- nil
+			e <- nil
+			close(r)
+			close(e)
+		} else {
+			ih := &InsolvencyHistoryResponse{}
+			resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", nil, false, ContentTypeJSON)
+			if err != nil {
+				e <- err
+			}
 
-		err = json.Unmarshal(resp, &ih)
-		if err != nil {
-			e <- err
+			err = json.Unmarshal(resp, &ih)
+			if err != nil {
+				e <- err
+			}
+			r <- ih
+			e <- nil
+			close(r)
+			close(e)
 		}
-		r <- ih
-		e <- nil
-		close(r)
-		close(e)
 	}()
 
 	return r, e

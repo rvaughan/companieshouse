@@ -127,6 +127,7 @@ type (
 		ForeignCompanyDetails                ForeignCompanyDetails `json:"foreign_company_details"`
 
 		Officers          *OfficerResponse           `json:"-"`
+		Filings           *FilingResponse            `json:"-"`
 		Charges           *ChargesResponse           `json:"-"`
 		InsolvencyHistory *InsolvencyHistoryResponse `json:"-"`
 	}
@@ -162,32 +163,35 @@ func (a *API) getCompany(companyNumber string, c *Company) <-chan error {
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{api: a}
 	ce := a.getCompany(companyNumber, c)
-
-	o, oe := c.GetOfficers()
-
-	if c.HasCharges {
-		ch, ce := c.GetCharges()
-		c.Charges = <-ch
-		if err := <-ce; err != nil {
-			return nil, err
-		}
-	}
-
-	if c.HasInsolvencyHistory {
-		i, ie := c.GetInsolvencyHistory()
-		c.InsolvencyHistory = <-i
-		if err := <-ie; err != nil {
-			return nil, err
-		}
-	}
-
-	// Get results
 	if err := <-ce; err != nil {
 		return nil, err
 	}
 
+	o, oe := c.GetOfficers()
+	f, fe := c.GetFilings()
+	ch, ce := c.GetCharges()
+	i, ie := c.GetInsolvencyHistory()
+
+	// Get results
+
+
 	c.Officers = <-o
 	if err := <-oe; err != nil {
+		return nil, err
+	}
+
+	c.Filings = <-f
+	if err := <-fe; err != nil {
+		return nil, err
+	}
+
+	c.Charges = <-ch
+	if err := <-ce; err != nil {
+		return nil, err
+	}
+
+	c.InsolvencyHistory = <-i
+	if err := <-ie; err != nil {
 		return nil, err
 	}
 

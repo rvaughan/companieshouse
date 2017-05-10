@@ -117,22 +117,30 @@ func (c *Company) getCharges() (*ChargesResponse, error) {
 func (c *Company) GetCharges() (<-chan *ChargesResponse, <-chan error) {
 	r := make(chan *ChargesResponse, 1)
 	e := make(chan error, 1)
+
 	go func() {
-		charges := &ChargesResponse{}
+		if !c.HasCharges {
+			r <- nil
+			e <- nil
+			close(r)
+			close(e)
+		} else {
+			charges := &ChargesResponse{}
 
-		resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/charges", nil, false, ContentTypeJSON)
-		if err != nil {
-			e <- err
-		}
+			resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/charges", nil, false, ContentTypeJSON)
+			if err != nil {
+				e <- err
+			}
 
-		err = json.Unmarshal(resp, charges)
-		if err != nil {
-			e <- err
+			err = json.Unmarshal(resp, charges)
+			if err != nil {
+				e <- err
+			}
+			r <- charges
+			e <- nil
+			close(r)
+			close(e)
 		}
-		r <- charges
-		e <- nil
-		close(r)
-		close (e)
 	}()
 
 	return r, e
