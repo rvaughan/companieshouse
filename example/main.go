@@ -111,7 +111,7 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data.Data["Company"] = *company
 
-		officers, err := company.GetOfficers()
+		/*officers, err := company.GetOfficers()
 		if err == nil {
 			data.Data["Officers"] = *officers
 		} else {
@@ -137,7 +137,7 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 			data.Data["InsolvencyDetails"] = *insolvencyDetails
 		} else {
 			log.Println("Error while getting insolvency details:", err)
-		}
+		} */
 	}
 
 	t.ExecuteTemplate(w, "base", data)
