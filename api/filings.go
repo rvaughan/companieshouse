@@ -23,7 +23,29 @@ import (
 	"github.com/BalkanTech/companieshouse/api/yaml"
 	"github.com/pkg/errors"
 	"io/ioutil"
+	"strings"
 )
+
+func ReplaceBetween(s *string, t, st, et string) {
+	var p int = len(t)
+	var useSt bool = true
+	str := *s
+
+	for {
+		i := strings.Index(str, t)
+		if i == -1 {
+			*s = str
+			break
+		}
+
+		if useSt {
+			str = str[:i] + st + str[i + p:]
+		} else {
+			str = str[:i] + et + str[i + p:]
+		}
+		useSt = !useSt
+	}
+}
 
 type FilingDescription string
 
@@ -32,6 +54,15 @@ func (fd FilingDescription) String() string {
 	if !ok {
 		return ""
 	}
+	return d
+}
+
+func (fd FilingDescription) AsHTML() string {
+	d, ok := yaml.FilingHistoryDescriptions[string(fd)]
+	if !ok {
+		return ""
+	}
+	ReplaceBetween(&d, "**", "<strong>", "</strong>")
 	return d
 }
 
