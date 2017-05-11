@@ -131,7 +131,6 @@ type (
 		Filings           *FilingResponse            `json:"-"`
 		Charges           *ChargesResponse           `json:"-"`
 		InsolvencyHistory *InsolvencyHistoryResponse `json:"-"`
-		Errors            []error                    `json:"-"`
 	}
 )
 
@@ -162,19 +161,24 @@ func (a *API) getCompany(companyNumber string, c *Company) <-chan error {
 	return e
 }
 
-type CompanyError struct {
-	s string
-	errors []error
+type CompanyError map[string]error
+
+func (e CompanyError) Set(k string, err error) {
+	if e == nil {
+		e = make(map[string]error)
+	}
+	e[k] = err
 }
 
 func (e CompanyError) Error() string {
-	return fmt.Sprintf("%s: %v", e.s, e.errors)
+	return fmt.Sprintf("%v", e)
 }
 
 // GetCompany gets the json data for a company from the Companies House REST API
 // and returns a new Company and an error
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{api: a}
+	var errs CompanyError
 	// Launch concurrent fetching of details
 	CompanyErr := a.getCompany(companyNumber, c)
 	officers, officersErr := a.GetOfficers(companyNumber)
@@ -185,31 +189,31 @@ func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	// Process answers
 	//c := <-company
 	if err := <-CompanyErr; err != nil {
-		return nil, err
+		errs.Set("company", err)
 	}
 
 	if err := <-officersErr; err != nil {
-		c.Errors = append(c.Errors, err)
+		errs.Set("officers", err)
 	}
 	c.Officers = <-officers
 
 	if err := <-filingsErr; err != nil {
-		c.Errors = append(c.Errors, err)
+		errs.Set("filings", err)
 	}
 	c.Filings = <-filings
 
 	if err := <-chargesErr; err != nil {
-		c.Errors = append(c.Errors, err)
+		errs.Set("charges", err)
 	}
 	c.Charges = <-charges
 
 	if err := <-insolvencyErr; err != nil {
-		c.Errors = append(c.Errors, err)
+		errs.Set("insolvency", err)
 	}
 	c.InsolvencyHistory = <-insolvency
 
-	if len(c.Errors) != 0 {
-		return nil, CompanyError{"Error while getting company details", c.Errors}
+	if errs != nil {
+		return nil, errs
 	}
 
 	return c, nil

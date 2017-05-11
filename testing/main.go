@@ -1,35 +1,16 @@
 package main
 
 import (
-	"io/ioutil"
+	"github.com/BalkanTech/companieshouse/api"
+	"time"
 	"log"
-	"gopkg.in/yaml.v2"
+	"os"
 )
 
-type Descriptor struct {
-	Description map[string]string `yaml:"description"`
-}
-
 func main() {
-	d := Descriptor{}
-	//D := &d{d: make(map[string]string)}
-	yamlFile, err := ioutil.ReadFile("../api/yaml/filing_history_descriptions.yml")
-	if err != nil {
-		log.Printf("yamlFile.Get err   #%v ", err)
-	}
-	err = yaml.Unmarshal(yamlFile, &d)
-	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
-	}
-
-	log.Println(d.Description["liquidation-change-of-membership-of-creditors-or-liquidation-committee"])
-}
-
-
-/*func main() {
 	ch := companieshouse.CompaniesHouseAPI(os.Getenv("CH_API_KEY"))
 	now := time.Now()
-	c, err := ch.GetCompany("06043462")
+	c, err := ch.GetCompany("09999801")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -40,4 +21,4 @@ func main() {
 	log.Println(c.Filings)
 	log.Println(c.Charges)
 	log.Println(c.InsolvencyHistory)
-} */
+}
