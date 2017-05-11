@@ -28,7 +28,7 @@ import (
 type FilingDescription string
 
 func (fd FilingDescription) String() string {
-	d, ok := yaml.FilingHistoryDescriptions[fd]
+	d, ok := yaml.FilingHistoryDescriptions[string(fd)]
 	if !ok {
 		return ""
 	}
