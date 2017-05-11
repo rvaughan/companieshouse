@@ -20,6 +20,7 @@ package companieshouse
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 type (
@@ -130,6 +131,7 @@ type (
 		Filings           *FilingResponse            `json:"-"`
 		Charges           *ChargesResponse           `json:"-"`
 		InsolvencyHistory *InsolvencyHistoryResponse `json:"-"`
+		Errors            []error                    `json:"-"`
 	}
 )
 
@@ -139,60 +141,75 @@ func (c Company) HasTasks() bool {
 
 func (a *API) getCompany(companyNumber string, c *Company) <-chan error {
 	e := make(chan error, 1)
-	c.CompanyNumber = companyNumber
 
 	go func() {
+		defer close(e)
 		resp, err := a.CallAPI("/company/"+companyNumber, nil, false, ContentTypeJSON)
 		if err != nil {
 			e <- err
+			return
 		}
 
 		err = json.Unmarshal(resp, &c)
 		if err != nil {
 			e <- err
+			return
 		}
+
 		e <- nil
-		close(e)
 	}()
 
 	return e
+}
+
+type CompanyError struct {
+	s string
+	errors []error
+}
+
+func (e CompanyError) Error() string {
+	return fmt.Sprintf("%s: %v", e.s, e.errors)
 }
 
 // GetCompany gets the json data for a company from the Companies House REST API
 // and returns a new Company and an error
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{api: a}
-	ce := a.getCompany(companyNumber, c)
-	if err := <-ce; err != nil {
+	// Launch concurrent fetching of details
+	CompanyErr := a.getCompany(companyNumber, c)
+	officers, officersErr := a.GetOfficers(companyNumber)
+	filings, filingsErr := a.GetFilings(companyNumber)
+	charges, chargesErr := a.GetCharges(companyNumber)
+	insolvency, insolvencyErr := a.GetInsolvencyHistory(companyNumber)
+
+	// Process answers
+	//c := <-company
+	if err := <-CompanyErr; err != nil {
 		return nil, err
 	}
 
-	o, oe := c.GetOfficers()
-	f, fe := c.GetFilings()
-	ch, ce := c.GetCharges()
-	i, ie := c.GetInsolvencyHistory()
-
-	// Get results
-
-
-	c.Officers = <-o
-	if err := <-oe; err != nil {
-		return nil, err
+	if err := <-officersErr; err != nil {
+		c.Errors = append(c.Errors, err)
 	}
+	c.Officers = <-officers
 
-	c.Filings = <-f
-	if err := <-fe; err != nil {
-		return nil, err
+	if err := <-filingsErr; err != nil {
+		c.Errors = append(c.Errors, err)
 	}
+	c.Filings = <-filings
 
-	c.Charges = <-ch
-	if err := <-ce; err != nil {
-		return nil, err
+	if err := <-chargesErr; err != nil {
+		c.Errors = append(c.Errors, err)
 	}
+	c.Charges = <-charges
 
-	c.InsolvencyHistory = <-i
-	if err := <-ie; err != nil {
-		return nil, err
+	if err := <-insolvencyErr; err != nil {
+		c.Errors = append(c.Errors, err)
+	}
+	c.InsolvencyHistory = <-insolvency
+
+	if len(c.Errors) != 0 {
+		return nil, CompanyError{"Error while getting company details", c.Errors}
 	}
 
 	return c, nil

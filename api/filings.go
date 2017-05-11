@@ -20,9 +20,20 @@ package companieshouse
 
 import (
 	"encoding/json"
+	"github.com/BalkanTech/companieshouse/api/yaml"
 	"github.com/pkg/errors"
 	"io/ioutil"
 )
+
+type FilingDescription string
+
+func (fd FilingDescription) String() string {
+	d, ok := yaml.FilingHistoryDescriptions[fd]
+	if !ok {
+		return ""
+	}
+	return d
+}
 
 type (
 	ContentType struct {
@@ -62,14 +73,14 @@ type (
 			Date        string `json:"date"`
 			Description string `json:"description"`
 		} `json:"associated_filings"`
-		Barcode     string `json:"barcode"`
-		Category    string `json:"category"`
-		Subcategory string `json:"subcategory"`
-		Date        ChDate `json:"date"`
-		Description string `json:"description"`
-		Links       Links  `json:"links"`
-		Pages       int    `json:"pages"`
-		PaperFiled  bool   `json:"paper_filed"`
+		Barcode     string            `json:"barcode"`
+		Category    string            `json:"category"`
+		Subcategory string            `json:"subcategory"`
+		Date        ChDate            `json:"date"`
+		Description FilingDescription `json:"description"`
+		Links       Links             `json:"links"`
+		Pages       int               `json:"pages"`
+		PaperFiled  bool              `json:"paper_filed"`
 		Resolutions []struct {
 			Category    string `json:"category"`
 			Description string `json:"description"`
@@ -135,25 +146,32 @@ func (c *Company) DownloadDocument(f *Filing, p string) error {
 	return nil
 }
 
-func (c *Company) GetFilings() (<-chan *FilingResponse, <-chan error) {
+func (a *API) GetFilings(c string) (<-chan *FilingResponse, <-chan error) {
 	r := make(chan *FilingResponse, 1)
 	e := make(chan error, 1)
+
 	go func() {
+		defer close(r)
+		defer close(e)
+
 		f := &FilingResponse{}
 
-		resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/filing-history", nil, false, ContentTypeJSON)
+		resp, err := a.CallAPI("/company/"+c+"/filing-history", nil, false, ContentTypeJSON)
 		if err != nil {
+			r <- nil
 			e <- err
+			return
 		}
 
 		err = json.Unmarshal(resp, f)
 		if err != nil {
+			r <- nil
 			e <- err
+			return
 		}
+
 		r <- f
 		e <- nil
-		close(r)
-		close (e)
 	}()
 
 	return r, e

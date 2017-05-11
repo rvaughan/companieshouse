@@ -65,32 +65,31 @@ func (c *Company) GetInsolvencyDetails() (*InsolvencyHistoryResponse, error) {
 	return insolvencies, err
 }
 
-func (c *Company) GetInsolvencyHistory() (<-chan *InsolvencyHistoryResponse, <-chan error) {
+func (a *API) GetInsolvencyHistory(c string) (<-chan *InsolvencyHistoryResponse, <-chan error) {
 	r := make(chan *InsolvencyHistoryResponse, 1)
 	e := make(chan error, 1)
 
 	go func() {
-		if !c.HasInsolvencyHistory {
-			r <- nil
-			e <- nil
-			close(r)
-			close(e)
-		} else {
-			ih := &InsolvencyHistoryResponse{}
-			resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", nil, false, ContentTypeJSON)
-			if err != nil {
-				e <- err
-			}
+		defer close(r)
+		defer close(e)
 
-			err = json.Unmarshal(resp, &ih)
-			if err != nil {
-				e <- err
-			}
-			r <- ih
-			e <- nil
-			close(r)
-			close(e)
+		ih := &InsolvencyHistoryResponse{}
+		resp, err := a.CallAPI("/company/" + c + "/insolvency", nil, false, ContentTypeJSON)
+		if err != nil {
+			r <- nil
+			e <- err
+			return
 		}
+
+		err = json.Unmarshal(resp, &ih)
+		if err != nil {
+			r <- nil
+			e <- err
+			return
+		}
+
+		r <- ih
+		e <- nil
 	}()
 
 	return r, e

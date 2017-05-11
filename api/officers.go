@@ -96,25 +96,30 @@ func (c *Company) getOfficers() (*OfficerResponse, error) {
 	return officers, nil
 }
 
-func (c *Company) GetOfficers() (<-chan *OfficerResponse, <-chan error) {
+func (a *API) GetOfficers(c string) (<-chan *OfficerResponse, <-chan error) {
 	r := make(chan *OfficerResponse, 1)
 	e := make(chan error, 1)
 
 	go func() {
+		defer close(r)
+		defer close(e)
+
 		officers := &OfficerResponse{}
-			resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/officers", nil, false, ContentTypeJSON)
+			resp, err := a.CallAPI("/company/" + c +"/officers", nil, false, ContentTypeJSON)
 		if err != nil {
+			r <- nil
 			e <- err
+			return
 		}
 
 		err = json.Unmarshal(resp, &officers)
 		if err != nil {
+			r <- nil
 			e <- err
+			return
 		}
 		r <- officers
 		e <- nil
-		close(r)
-		close(e)
 	}()
 
 	return r, e
