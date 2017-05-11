@@ -24,6 +24,7 @@ import (
 	"github.com/pkg/errors"
 	"io/ioutil"
 	"strings"
+	"html/template"
 )
 
 func ReplaceBetween(s *string, t, st, et string) {
@@ -57,13 +58,13 @@ func (fd FilingDescription) String() string {
 	return d
 }
 
-func (fd FilingDescription) AsHTML() string {
+func (fd FilingDescription) AsHTML() template.HTML {
 	d, ok := yaml.FilingHistoryDescriptions[string(fd)]
 	if !ok {
 		return ""
 	}
 	ReplaceBetween(&d, "**", "<strong>", "</strong>")
-	return d
+	return template.HTML(d)
 }
 
 type (
