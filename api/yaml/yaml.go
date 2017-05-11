@@ -4,6 +4,9 @@ import (
 	"io/ioutil"
 	"log"
 	"gopkg.in/yaml.v2"
+	"path"
+	"runtime"
+	"errors"
 )
 
 type yamlDescriptions struct {
@@ -16,7 +19,12 @@ var FilingHistoryDescriptions StrEnum
 
 func getDescriptions(f string) (*yamlDescriptions, error) {
 	d := &yamlDescriptions{}
-	yamlFile, err := ioutil.ReadFile(f)
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return nil, errors.New("No caller information")
+	}
+	file := path.Join(path.Dir(filename), f)
+	yamlFile, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
@@ -28,8 +36,7 @@ func getDescriptions(f string) (*yamlDescriptions, error) {
 }
 
 func init() {
-	FilingHistoryDescriptions = make(StrEnum)
-	d, err := getDescriptions("filing_history_descriptions.yml")
+	d, err := getDescriptions("./filing_history_descriptions.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
