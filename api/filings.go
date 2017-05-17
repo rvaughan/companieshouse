@@ -97,12 +97,12 @@ type (
 	Filing struct {
 		Annotations []struct {
 			Annotation  string `json:"annotation"`
-			Date        string `json:"date"`
+			Date        ChDate `json:"date"`
 			Description string `json:"description"`
 		} `json:"annotations"`
 		AssociatedFilings []struct {
 			Type        string `json:"type"`
-			Date        string `json:"date"`
+			Date        ChDate `json:"date"`
 			Description string `json:"description"`
 			DescriptionValues struct {
 				Description FilingDescription `json:"description"`
