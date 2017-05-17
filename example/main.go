@@ -150,7 +150,7 @@ func showFilingHandler(w http.ResponseWriter, r *http.Request) {
 
 	// stream straight to client(browser)
 	w.Header().Set("Content-type", "application/pdf")
-	w.Header().Set("Content-Disposition", fmt.Sprintf("inline; filename=%s.%s", f.Barcode, "pdf"))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("inline; filename=\"%s.%s\"", f.TransactionID, "pdf"))
 
 	if _, err := b.WriteTo(w); err != nil {
 		fmt.Fprintf(w, err.Error())
@@ -190,7 +190,7 @@ func downloadFilingHandler(w http.ResponseWriter, r *http.Request) {
 
 	// stream straight to client(browser)
 	w.Header().Set("Content-type", "application/pdf")
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s.%s", f.Barcode, "pdf"))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s.%s\"", f.TransactionID, "pdf"))
 
 	if _, err := b.WriteTo(w); err != nil {
 		fmt.Fprintf(w, err.Error())
