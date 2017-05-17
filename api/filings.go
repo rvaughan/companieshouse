@@ -244,3 +244,5 @@ func (c *Company) GetFiling(tid string) (*Filing, error) {
 	}
 	return nil, errors.New("Not found")
 }
+
+// Todo: Merge Description enum + DescriptionValue at json unmarshal

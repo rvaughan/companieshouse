@@ -25,9 +25,8 @@ import (
 type (
 	// Charge contains the data of a company's charges
 	Charge struct {
-		ID                   string `json:"id"`
 		Etag                 string `json:"etag"`
-		AcquiredOn           string `json:"acquired_on"`
+		AcquiredOn           ChDate `json:"acquired_on"`
 		AssetsCeasedReleased string `json:"assets_ceased_released"`
 		ChargeCode           string `json:"charge_code"`
 		ChargeNumber         int    `json:"charge_number"`
@@ -35,9 +34,9 @@ type (
 			Description string `json:"description"`
 			Type        string `json:"type"`
 		} `json:"classification"`
-		CoveringInstrumentDate string `json:"covering_instrument_date"`
-		Created                string `json:"created_on"`
-		Delivered              string `json:"delivered_on"`
+		CoveringInstrumentDate ChDate `json:"covering_instrument_date"`
+		CreatedOn                ChDate `json:"created_on"`
+		DeliveredOn              ChDate `json:"delivered_on"`
 		Cases                  []struct {
 			Number int `json:"case_number"`
 			Links  struct {
@@ -61,8 +60,8 @@ type (
 		PersonsEntitled []struct {
 			Name string `json:"name"`
 		} `json:"persons_entitled"`
-		Resolved            string `json:"resolved_on"`
-		Satisfied           string `json:"satisfied_on"`
+		ResolvedOn            ChDate `json:"resolved_on"`
+		SatisfiedOn           ChDate `json:"satisfied_on"`
 		ScottishAlterations struct {
 			AlterationsToOrder        bool `json:"has_alterations_to_order"`
 			AlterationsToProhibitions bool `json:"has_alterations_to_prohibitions"`
@@ -74,7 +73,7 @@ type (
 		} `json:"secured_details"`
 		Status       string `json:"status"`
 		Transactions []struct {
-			DeliveredOn      string `json:"delivered_on"`
+			DeliveredOn      ChDate `json:"delivered_on"`
 			FilingType       string `json:"filing_type"`
 			InsolvencyNumber int    `json:"insolvency_case_number"`
 			Links            struct {
@@ -88,11 +87,11 @@ type (
 	// ChargesResponse contains the server response of a data request to the companies house API
 	ChargesResponse struct {
 		Etag          string   `json:"etag"`
-		PartSatisfied int      `json:"part_satisfied_count"`
-		Satisfied     int      `json:"satisfied_count"`
-		Total         int      `json:"total_count"`
-		Unfiletered   int      `json:"unfiletered_count"`
-		Charges       []*Charge `json:"items"`
+		PartSatisfiedCount int      `json:"part_satisfied_count"`
+		SatisfiedCount    int      `json:"satisfied_count"`
+		TotalCount         int      `json:"total_count"`
+		UnfilteredCount   int      `json:"unfiltered_count"`
+		Items       []*Charge `json:"items"`
 	}
 )
 

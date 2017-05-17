@@ -95,6 +95,7 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/tab_general.html",
 		"templates/tab_officers.html",
 		"templates/tab_filings.html",
+		"templates/tab_charges.html",
 	)
 	if err != nil {
 		fmt.Fprintf(w, "Error while parsing template: %s", err.Error())
@@ -152,7 +153,7 @@ func getFile(w http.ResponseWriter, r *http.Request, cd string) {
 	}
 	b := bytes.NewBuffer(d)
 
-	// stream straight to client(browser)
+	// Send the file to the client
 	w.Header().Set("Content-type", "application/pdf")
 	w.Header().Set("Content-Disposition", fmt.Sprintf("%s; filename=\"%s.%s\"", cd, f.TransactionID, "pdf"))
 
