@@ -104,6 +104,9 @@ type (
 			Type        string `json:"type"`
 			Date        string `json:"date"`
 			Description string `json:"description"`
+			DescriptionValues struct {
+				Description FilingDescription `json:"description"`
+			} `json:"description_values"`
 		} `json:"associated_filings"`
 		Barcode     string            `json:"barcode"`
 		Category    string            `json:"category"`
