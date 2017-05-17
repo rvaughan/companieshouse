@@ -179,7 +179,7 @@ func (e CompanyError) Error() string {
 func (a *API) GetCompany(companyNumber string) (*Company, error) {
 	c := &Company{api: a}
 	var errs CompanyError
-	// Launch concurrent fetching of details
+	// Fetch details
 	CompanyErr := a.getCompany(companyNumber, c)
 	officers, officersErr := a.GetOfficers(companyNumber)
 	filings, filingsErr := a.GetFilings(companyNumber)

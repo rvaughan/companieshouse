@@ -115,7 +115,10 @@ type (
 		PaperFiled  bool              `json:"paper_filed"`
 		Resolutions []struct {
 			Category    string `json:"category"`
-			Description FilingDescription `json:"description"`
+			//Description FilingDescription `json:"description"`
+			DescriptionValues struct {
+				Description FilingDescription `json:"description"`
+			} `json:"description_values"`
 			DocumentID  string `json:"document_id"`
 			ReceiveDate ChDate `json:"receive_date"`
 			Subcategory string `json:"subcategory"`
