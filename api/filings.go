@@ -110,12 +110,15 @@ type (
 		Subcategory string            `json:"subcategory"`
 		Date        ChDate            `json:"date"`
 		Description FilingDescription `json:"description"`
+		DescriptionValues struct {
+			Description FilingDescription `json:"description"`
+		} `json:"description_values"`
 		Links       Links             `json:"links"`
 		Pages       int               `json:"pages"`
 		PaperFiled  bool              `json:"paper_filed"`
 		Resolutions []struct {
 			Category    string `json:"category"`
-			//Description FilingDescription `json:"description"`
+			Description FilingDescription `json:"description"`
 			DescriptionValues struct {
 				Description FilingDescription `json:"description"`
 			} `json:"description_values"`
