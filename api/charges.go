@@ -90,7 +90,7 @@ type (
 		PartSatisfiedCount int      `json:"part_satisfied_count"`
 		SatisfiedCount    int      `json:"satisfied_count"`
 		TotalCount         int      `json:"total_count"`
-		UnfilteredCount   int      `json:"unfiltered_count"`
+		UnfileteredCount   int      `json:"unfiletered_count"`
 		Items       []*Charge `json:"items"`
 	}
 )
