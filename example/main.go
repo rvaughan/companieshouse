@@ -117,7 +117,11 @@ func companyHandler(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "base", data)
 }
 
-func showFilingHandler(w http.ResponseWriter, r *http.Request) {
+func getFile(w http.ResponseWriter, r *http.Request, cd string) {
+	if cd == "" {
+		cd = "inline"
+	}
+
 	v := mux.Vars(r)
 	cid, ok := v["cid"]
 	if !ok {
@@ -150,49 +154,17 @@ func showFilingHandler(w http.ResponseWriter, r *http.Request) {
 
 	// stream straight to client(browser)
 	w.Header().Set("Content-type", "application/pdf")
-	w.Header().Set("Content-Disposition", fmt.Sprintf("inline; filename=\"%s.%s\"", f.TransactionID, "pdf"))
+	w.Header().Set("Content-Disposition", fmt.Sprintf("%s; filename=\"%s.%s\"", cd, f.TransactionID, "pdf"))
 
 	if _, err := b.WriteTo(w); err != nil {
 		fmt.Fprintf(w, err.Error())
 	}
 }
 
+func showFilingHandler(w http.ResponseWriter, r *http.Request) {
+	getFile(w, r, "inline")
+}
+
 func downloadFilingHandler(w http.ResponseWriter, r *http.Request) {
-	v := mux.Vars(r)
-	cid, ok := v["cid"]
-	if !ok {
-		http.NotFound(w, r)
-		return
-	}
-
-	fid, ok := v["fid"]
-	if !ok {
-		http.NotFound(w, r)
-		return
-	}
-
-	c, err := ch.GetCompany(cid)
-	if err != nil {
-		http.NotFound(w, r)
-		return
-	}
-
-	f, err := c.GetFiling(fid)
-	if err != nil {
-		fmt.Fprintf(w, err.Error())
-	}
-
-	d, err := c.GetDocument(f)
-	if err != nil {
-		fmt.Fprintf(w, err.Error())
-	}
-	b := bytes.NewBuffer(d)
-
-	// stream straight to client(browser)
-	w.Header().Set("Content-type", "application/pdf")
-	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s.%s\"", f.TransactionID, "pdf"))
-
-	if _, err := b.WriteTo(w); err != nil {
-		fmt.Fprintf(w, err.Error())
-	}
+	getFile(w, r, "attachment")
 }
