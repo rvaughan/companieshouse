@@ -48,6 +48,30 @@ func ReplaceBetween(s *string, t, st, et string) {
 	}
 }
 
+func findBetween(s, st, et string, sp int) (int, int) {
+	str := s[sp:]
+	lst := len(st)
+	i := strings.Index(str, st)
+	if i == -1 {
+		return -1, -1
+	}
+
+	j := strings.Index(str[i+lst:], et)
+	if j == -1 {
+		return i, -1
+	}
+	return i + lst, i + j - 1
+}
+
+func FindBetween(s, st, et string, sp int) string {
+	str := s[sp:]
+	start, end := findBetween(str, st, et, 0)
+	if start == -1 || end == -1 {
+		return ""
+	}
+	return str[start:end]
+}
+
 type FilingDescription string
 
 func (fd FilingDescription) String() string {
@@ -114,7 +138,42 @@ type (
 		Date        ChDate            `json:"date"`
 		Description FilingDescription `json:"description"`
 		DescriptionValues struct {
-			Description FilingDescription `json:"description"`
+			Description string `json:"description"`
+			BroughtDownDate string `json:"brought_down_date"`
+			CaseStartDate ChDate `json:"case_start_date"`
+			FormAttached string `json:"form_attached"`
+			CaseEndDate ChDate `json:"case_end_date"`
+			ChargeNumber string `json:"charge_number"`
+			ChargeCreationDate ChDate `json:"charge_creation_date"`
+			PropertyAcquiredDate ChDate `json:"property_acquired_date"`
+			MortgageSatisfactionDate ChDate `json:"mortgage_satisfaction_date"`
+			ResolutionDate ChDate `json:"resolution_date"`
+			MadeUpDate ChDate `json:"made_up_date"`
+			NewDate ChDate `json:"new_date"`
+			BranchNumber string `json:"branch_number"`
+			RepresentativeDetails string `json:"representative_details"`
+			OfficerName string `json:"officer_name"`
+			AppointmentDate ChDate `json:"appointment_date"`
+			ChangeDate ChDate `json:"change_date"`
+			TerminationDate ChDate `json:"termination_date"`
+			CompanyNumber string `json:"company_number"`
+			CloseDate ChDate `json:"close_date"`
+			IncorporationDate ChDate `json:"incorporation_date"`
+			FormType string `json:"form_type"`
+			RemovalDate ChDate `json:"removal_date"`
+			OldAddress string `json:"old_address"`
+			NewAddress string `json:"new_address"`
+			OldJurisdiction string `json:"old_jurisdiction"`
+			NewJurisdiction string `json:"new_jurisdiction"`
+			Date ChDate `json:"date"`
+			ChangeDetails string `json:"change_details"`
+			ChangeType string `json:"change_type"`
+			ChangeAddress string `json:"change_address"`
+			DefaultAddress string `json:"default_address"`
+			PscName string `json:"psc_name"`
+			CessationDate ChDate `json:"cessation_date"`
+			WithdrawalDate ChDate `json:"withdrawal_date"`
+			NotificationDate ChDate `json:"notification_date"`
 		} `json:"description_values"`
 		Links       Links             `json:"links"`
 		Pages       int               `json:"pages"`

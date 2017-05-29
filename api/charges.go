@@ -95,8 +95,6 @@ type (
 	}
 )
 
-// GetCharges gets the json data for a company's charges from the Companies House REST API
-// and returns a new ChargesResponse and an error
 func (c *Company) getCharges() (*ChargesResponse, error) {
 	charges := &ChargesResponse{}
 
@@ -113,6 +111,8 @@ func (c *Company) getCharges() (*ChargesResponse, error) {
 	return charges, err
 }
 
+// GetCharges gets the json data for a company's charges from the Companies House REST API
+// and returns a new ChargesResponse and an error
 func (a *API) GetCharges(c string) (<-chan *ChargesResponse, <-chan error) {
 	r := make(chan *ChargesResponse, 1)
 	e := make(chan error, 1)
