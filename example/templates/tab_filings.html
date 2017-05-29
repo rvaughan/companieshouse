@@ -1,0 +1,74 @@
+{{ define "tabFilings" }}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Filings</h3>
+        <ul class="list-inline">
+            <li><span class="label label-primary">Total {{ .Data.Company.Filings.TotalCount }}</span></li>
+        </ul>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type/Category</th>
+                <th>Description</th>
+                <th>Barcode</th>
+                <th>Pages</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $i, $item := .Data.Company.Filings.Items }}
+            <tr>
+                <td>{{ $item.Date.Format "02/01/2006" }}</td>
+                <td>
+                    <dl>
+                        <dt>Type</dt><dd>&nbsp;&nbsp;{{ $item.Type }}</dd> 
+                        <dt>Category</dt><dd>&nbsp;&nbsp;{{ $item.Category }}</dd>
+                    </dl>
+                </td>
+                <td>
+                    {{ $item.Description.AsHTML }}
+                    {{ if $item.Resolutions }}
+                        <h5>Resolutions</h5>
+                        <ol>    
+                        {{ range $j, $r := $item.Resolutions }}
+                            <li><strong>{{ $r.ReceiveDate.Format "02/01/2006"}}</strong>  {{ $r.DescriptionValues.Description }}</li>
+                            <li>{{ $r }}</li>
+                        {{ end }}  
+                        </ol>
+                    {{ end }}
+
+                    {{ if $item.AssociatedFilings}}
+                        <h5>Associated filings</h5>
+                        <ol>    
+                        {{ range $j, $af := $item.AssociatedFilings }}
+                            <li><strong>{{ $af.Date.Format "02/01/2006"}} - {{ $af.Type }}</strong>  {{ $af.Description.AsHTML }}</li>
+                        {{ end }}  
+                        </ol>
+                    {{ end }}
+
+                    {{ if $item.Annotations}}
+                        <h5>Annotations</h5>
+                        <ol>    
+                        {{ range $j, $an := $item.Annotations }}
+                            <li><strong>{{ $an.Date.Format "02/01/2006"}} - {{ $an.Annotation }}</strong>  {{ $an.Description.AsHTML }}</li>
+                        {{ end }}  
+                        </ol>
+                    {{ end }}
+                </td>
+                <td>{{ $item.Barcode }}</td>
+                <td>{{ $item.Pages }}</td>
+                <td>
+                    {{ if ne $item.Pages 0 }}
+                        <a href="/document/{{ $.Data.Company.CompanyNumber }}/{{ $item.TransactionID }}" target="_blank"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                        <a href="/document/{{ $.Data.Company.CompanyNumber }}/{{ $item.TransactionID }}/download"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
+                    {{ end }}
+                </td>
+            </tr>
+            {{ end }}
+        
+        </tbody>
+    </table>
+</div>
+{{ end }}

@@ -1,0 +1,285 @@
+{{ define "tabGeneral" }}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>General information</h3>
+    </div>
+    <table class="table">
+        <tr>
+            <th scope="row">Company number</th>
+            <td>{{ .Data.Company.CompanyNumber }}</td>
+        </tr>
+
+        <tr>
+            <th scope="row">Status</th>
+            <td>{{ .Data.Company.CompanyStatus }} {{ .Data.Company.CompanyStatusDetail }}</td>
+        </tr>
+
+        <tr>
+            <th scope="row">Company type</th>
+            <td>{{ .Data.Company.Type }} {{ if .Data.Company.IsCommunityInterestCompany }}<span class="label label-primary">CIC</span>{{end }}</td>
+        </tr>
+
+        {{ if .Data.Company.Jurisdiction }}
+            <tr>
+                <th scope="row">Jurisdiction</th>
+                <td>{{ .Data.Company.Jurisdiction }}</td>
+            </tr>
+        {{ end }} 
+
+        {{ if .Data.Company.RegisteredOfficeAddress }}
+            <tr>
+                <th scope="row">
+                    Registered office
+                    {{ if .Data.Company.RegisteredOfficeIsInDispute }}
+                        <br><span class="label label-danger"><i class="fa fa-exclamation-triangle fa-fw" aria-hidden="true"></i> Dispute</span>
+                    {{ end }}
+                    {{ if .Data.Company.UndeliverableRegisteredOfficeAddress }}
+                        <br><span class="label label-danger"><i class="fa fa-exclamation-triangle fa-fw" aria-hidden="true"></i> Undeliverable</span>
+                    {{ end }}
+                </th>
+                <td>
+                    {{ if .Data.Company.RegisteredOfficeAddress.CareOf }}{{ .Data.Company.RegisteredOfficeAddress.CareOf }}<br>{{end }} 
+                    {{ if .Data.Company.RegisteredOfficeAddress.PoBox }}
+                        {{ .Data.Company.RegisteredOfficeAddress.PoBox }}<br>
+                    {{ end }} 
+                    {{ if .Data.Company.RegisteredOfficeAddress.Premises }}
+                        {{ .Data.Company.RegisteredOfficeAddress.Premises}}<br>
+                    {{ end }} 
+                    {{ if .Data.Company.RegisteredOfficeAddress.AddressLine1 }}
+                        {{ .Data.Company.RegisteredOfficeAddress.AddressLine1}}<br>
+                    {{ end }} 
+                    {{ if .Data.Company.RegisteredOfficeAddress.AddressLine2 }}
+                        {{ .Data.Company.RegisteredOfficeAddress.AddressLine2}}<br>
+                    {{ end }} 
+                    {{ if .Data.Company.RegisteredOfficeAddress.Locality }}
+                        {{ .Data.Company.RegisteredOfficeAddress.Locality}}<br>
+                    {{ end }} 
+                    {{ if .Data.Company.RegisteredOfficeAddress.Region }}
+                        {{ .Data.Company.RegisteredOfficeAddress.Region}}<br>
+                    {{ end }} 
+                    {{ if .Data.Company.RegisteredOfficeAddress.PostalCode }}
+                        {{ .Data.Company.RegisteredOfficeAddress.PostalCode}}<br>
+                    {{ end }} 
+                    {{ if .Data.Company.RegisteredOfficeAddress.Country }}
+                        {{ .Data.Company.RegisteredOfficeAddress.Country }}
+                    {{ end }}
+                </td>
+            </tr>
+        {{ end }} 
+
+        {{ if not .Data.Company.DateOfCreation.IsZero }}
+            <tr>
+                <th scope="row">
+                    {{ if or .Data.Company.BranchCompanyDetails .Data.Company.ForeignCompanyDetails }} Opened on {{ else }} Date of Incorporation{{ end }}
+                </th>
+                <td>{{ .Data.Company.DateOfCreation.Format "02/01/2006" }}</td>
+            </tr>
+        {{ end }} 
+        
+        {{ if not .Data.Company.DateOfCessation.IsZero }}
+            <tr>
+                <th scope="row">Ended</th>
+                <td>{{ .Data.Company.DateOfCessation.Format "02/01/2006" }}</td>
+            </tr>
+        {{ end }} 
+        
+        {{ if .Data.Company.BranchCompanyDetails.ParentCompanyNumber }}
+            <tr>
+                <th scope="row" colspan="2">
+                    <h4>Branch company details</h4>
+                </th>
+            </tr>
+
+            <tr>
+                <th scope="row">Business activity</th>
+                <td>{{ .Data.Company.BranchCompanyDetails.BusinessActivity }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Parent company name</th>
+                <td>{{ .Data.Company.BranchCompanyDetails.ParentCompanyName }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Parent company number</th>
+                <td>{{ .Data.Company.BranchCompanyDetails.ParentCompanyNumber }}</td>
+            </tr>
+        {{ end }} 
+        
+        {{ if .Data.Company.ForeignCompanyDetails.RegistrationNumber }}
+            <tr>
+                <th scope="row" colspan="2">
+                    <h4>Foreign company details</h4>
+                </th>
+            </tr>
+
+            <tr>
+                <th scope="row">Registration number</th>
+                <td>{{ .Data.Company.ForeignCompanyDetails.RegistrationNumber }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Legal form</th>
+                <td>{{ .Data.Company.ForeignCompanyDetails.LegalForm }}</td>
+            </tr>
+
+            {{ if .Data.Company.ForeignCompanyDetails.CompanyType }}
+                <tr>
+                    <th scope="row">Company type</th>
+                    <td>{{ .Data.Company.ForeignCompanyDetails.CompanyType }}</td>
+                </tr>
+            {{ end }} 
+
+            {{ if .Data.Company.ForeignCompanyDetails.GovernedBy }}
+                <tr>
+                    <th scope="row">Governed by</th>
+                    <td>{{ .Data.Company.ForeignCompanyDetails.GovernedBy }}</td>
+                </tr>
+            {{ end }}
+
+            <tr>
+                <th scope="row">Originating registry</th>
+                <td>{{ .Data.Company.ForeignCompanyDetails.OriginatingRegistry.Name }} {{ .Data.Company.ForeignCompanyDetails.OriginatingRegistry.Country }}</td>
+            </tr>
+
+            {{ if or .Data.Company.ForeignCompanyDetails.BusinessActivity .Data.Company.ForeignCompanyDetails.IsACreditFinancialInstitution }}
+                <tr>
+                    <th scope="row">Business activity</th>
+                    <td>
+                        {{ .Data.Company.ForeignCompanyDetails.BusinessActivity }} 
+                        {{ if .Data.Company.ForeignCompanyDetails.IsACreditFinancialInstitution}}
+                            <span class="label label-primary"><i class="fa fa-money fa-fw" aria-hidden="true"></i> Credit financial institution</span>
+                        {{ end }}
+                    </td>
+                </tr>
+            {{ end }} 
+        {{ end }}
+    </table>
+
+    {{ if .Data.Company.HasTasks }}
+        <div class="panel-body">
+            <div class="col-xs-4">
+                {{ if or (not .Data.Company.Accounts.NextAccounts.DueOn.IsZero) (not .Data.Company.Accounts.NextMadeUpTo.IsZero) }}
+                    <h4>Annual Accounts</h4>
+                    <dl>
+                        {{ if not .Data.Company.Accounts.NextAccounts.DueOn.IsZero }}
+                            <dt>Next accounts</dt>
+                            <dd>{{ .Data.Company.Accounts.NextAccounts.DueOn.Format "02/01/2006" }}
+                                {{ if .Data.Company.Accounts.NextAccounts.Overdue }} 
+                                    <span class="label label-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> OVERDUE</span>
+                                {{ end }}</dd><br>
+
+                            <dt>Next accounts period</dt>
+                            <dd>{{ .Data.Company.Accounts.NextAccounts.PeriodStartOn.Format "02/01/2006" }} to {{ .Data.Company.Accounts.NextAccounts.PeriodEndOn.Format "02/01/2006" }}</dd><br> 
+                        {{ end }} 
+                        
+                        {{ if not .Data.Company.Accounts.LastAccounts.MadeUpTo.IsZero }}
+                            <dt>Last accounts made up to</dt>
+                            <dd>{{ .Data.Company.Accounts.LastAccounts.MadeUpTo.Format "02/01/2006" }}</dd><br>
+
+                            <dt>Last accounts type</dt>
+                            <dd>{{ .Data.Company.Accounts.LastAccounts.Type }}</dd><br> 
+                        
+                            {{ if not .Data.Company.Accounts.LastAccounts.PeriodStartOn.IsZero }}
+                                <dt>Last accounts period</dt>
+                                <dd>{{ .Data.Company.Accounts.LastAccounts.PeriodStartOn.Format "02/01/2006" }} to {{ .Data.Company.Accounts.LastAccounts.PeriodEndOn.Format "02/01/2006" }}</dd>
+                            {{ end }} 
+                        {{ end }} 
+                        
+                        {{ if .Data.Company.ForeignCompanyDetails.AccountingRequirement.ForeignAccountType }}
+                            <dt>Foreign account type</dt>
+                            <dd>{{ .Data.Company.ForeignCompanyDetails.AccountingRequirement.ForeignAccountType }}</dd><br>
+
+                            <dt>Terms of account publication</dt>
+                            <dd>{{ .Data.Company.ForeignCompanyDetails.AccountingRequirement.TermsOfAccountPublication }}</dd><br>
+
+                            <dt>Accounting reference date</dt>
+                            <dd>{{ .Data.Company.Accounts.AccountingReferenceDate.Day }}/{{ .Data.Company.Accounts.AccountingReferenceDate.Month}}</dd><br> 
+                        {{ end }}
+                    </dl>
+                {{ end }}
+            </div>
+
+            <div class="col-xs-4">
+                {{ if not .Data.Company.ConfirmationStatement.NextDue.IsZero }}
+                    <h4>Confirmation statement</h4>
+                    <dl>
+                        <dt>Next due</dt>
+                        <dd>{{ .Data.Company.ConfirmationStatement.NextDue.Format "02/01/2006" }}
+                            {{ if .Data.Company.ConfirmationStatement.Overdue}}
+                                <span class="label label-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> OVERDUE</span>
+                            {{end }}
+                        </dd><br>
+
+                        <dt>Next made up to</dt>
+                        <dd>{{ .Data.Company.ConfirmationStatement.NextMadeUpTo.Format "02/01/2006" }}</dd><br>
+
+                        <dt>Last made up to</dt>
+                        <dd>{{ .Data.Company.ConfirmationStatement.LastMadeUpTo.Format "02/01/2006" }}</dd>
+                    </dl>
+                {{ end }}
+            </div>
+
+            <div class="col-xs-4">
+                {{ if not .Data.Company.AnnualReturn.LastMadeUpTo.IsZero }}
+                    <h4>Annual Return</h4>
+                    <dl>
+                        {{ if not .Data.Company.AnnualReturn.NextDue.IsZero }}
+                            <dt>Next due</dt>
+                            <dd>{{ .Data.Company.AnnualReturn.NextDue.Format "02/01/2006" }}
+                                {{ if .Data.Company.AnnualReturn.Overdue }}
+                                    <span class="label label-warning"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> OVERDUE</span>
+                                {{ end }}
+                            </dd>
+
+                            <dt>Next made up to</dt>
+                            <dd>{{ .Data.Company.AnnualReturn.NextMadeUpTo.Format "02/01/2006" }}</dd>
+                         {{ end }}
+
+                        <dt>Last made up to</dt>
+                        <dd>{{ .Data.Company.AnnualReturn.LastMadeUpTo.Format "02/01/2006" }}</dd>
+                    </dl>
+                {{ end }}
+            </div>
+        </div>
+    {{ end }} 
+    
+    {{ if .Data.Company.SICCodes }}
+        <div class="panel-body">
+            <h4>Standard industrial classifications (SIC)</h4>
+            <div class="row">
+                {{ range $i, $sic := .Data.Company.SICCodes }}
+                    <div class="col-xs-3">
+                        <span class="label label-primary"><i class="fa fa-tag" aria-hidden="true"></i> {{ $sic }}</span>
+                    </div>
+                {{ end }}
+            </div>
+        </div>
+    {{ end }} 
+    
+    {{ if .Data.Company.PreviousCompanyNames }}
+    <div class="panel-body">
+        <h4>Previous company names</h4>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>From</th>
+                <th>To</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{ range $i, $name := .Data.Company.PreviousCompanyNames }}
+                <tr>
+                    <td>{{ $name.Name }}</td>
+                    <td>{{ $name.EffectiveFrom.Format "02/01/2006" }}</td>
+                    <td>{{ $name.CeasedOn.Format "02/01/2006" }}</td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
+    {{ end }}
+</div>
+{{ end }}

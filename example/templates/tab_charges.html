@@ -1,0 +1,68 @@
+{{ define "tabCharges" }}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3>Charges</h3>
+            <ul class="list-inline">
+                <li><span class="label label-primary">Total {{ .Data.Company.Charges.TotalCount }}</span></li>
+                <li><span class="label label-success">Satisfied {{ .Data.Company.Charges.SatisfiedCount }}</span></li>
+                <li><span class="label label-warning">Part. satisfied {{ .Data.Company.Charges.PartSatisfiedCount }}</span></li>
+                <li><span class="label label-danger">Unsatisfied {{ .Data.Company.Charges.UnfileteredCount }}</span></li>
+            </ul>
+        </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Classification</th>
+                <th>Created on</th>
+                <th>Delivered on</th>
+                <th>Status</th>
+                <th>Persons entitled</th>
+                <th>Particulars</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $i, $item := .Data.Company.Charges.Items }}
+            <tr>
+                <td>{{ $item.Classification.Description }} {{ $item.Classification.Type }}</td>
+                <td>{{ $item.CreatedOn.Format "02/01/2006" }}</td>
+                <td>{{ $item.DeliveredOn.Format "02/01/2006" }}</td>
+                <td>{{ $item.Status }}</td>
+                <td>
+                    <ul>
+                    {{ range $j, $person := $item.PersonsEntitled }}
+                        <li>{{ $person.Name }}</li>
+                    {{ end }}
+                    </ul>
+                </td>
+                <td>
+                    {{ $item.Particulars.Description }}
+                    {{ $item.Particulars.Type }}
+                    <ul class="list-unstyled">
+                        {{ if $item.Particulars.ChargorActingAsBareTrustee }}
+                            <li><span class="label label-default">Chargor acting as bare trustee</span></li>
+                        {{ end }}
+
+                        {{ if $item.Particulars.ContainsFixedCharge }}
+                            <li><span class="label label-default">Contains fixed charge</span></li>
+                        {{ end }}
+
+                        {{ if $item.Particulars.ContainsFloatingCharge }}
+                            <li><span class="label label-default">Contains floating charge</span></li>
+                        {{ end }}
+
+                        {{ if $item.Particulars.ContainsNegativePledge }}
+                            <li><span class="label label-default">Contains negative pledge</span></li>
+                        {{ end }}
+                        {{ if $item.Particulars.FloatingChargeCoversAll }}
+                            <li><span class="label label-default">Floating charge covers all</span></li>
+                        {{ end }}
+                    </ul>
+                </td>
+            </tr>
+            {{ end }}
+        
+        </tbody>
+    </table>
+    </div>
+{{ end }}
