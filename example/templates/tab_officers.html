@@ -1,0 +1,88 @@
+{{ define "tabOfficers" }}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Officers</h3>
+        <ul class="list-inline">
+            <li><span class="label label-primary">Total {{ .Data.Company.Officers.TotalResults }}</span></li>
+            <li><span class="label label-success">Active {{ .Data.Company.Officers.ActiveCount }}</span></li>
+            <li><span class="label label-default">Inactive {{ .Data.Company.Officers.InactiveCount }}</span></li>
+            <li><span class="label label-danger">Resigned {{ .Data.Company.Officers.ResignedCount }}</span></li>
+        </ul>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Service address</th>
+                <th>Date of birth</th>
+                <th>Nationality</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $i, $item := .Data.Company.Officers.Items }}
+            <tr>
+                <td>
+                    {{ $item.Name }}
+                    {{ if $item.FormerNames }}
+                        <h5>Former names</h5>
+                        {{ range $j, $fn := $item.FormerNames }}
+                            {{ $fn.Surname }}, {{ $fn.Forenames }}
+                        {{ end }}
+                    {{ end }}
+                </td>
+                <td>
+                    {{ if $item.Address.CareOf }}
+                        {{ $item.Address.Careof }}<br>
+                    {{ end }} 
+                    {{ if $item.Address.PoBox }}
+                        {{ $item.Address.PoBox }}<br>
+                    {{ end }} 
+                    {{ if $item.Address.Premises }}
+                        {{ $item.Address.Premises}}<br>
+                    {{ end }} 
+                    {{ if $item.Address.AddressLine1 }}
+                        {{ $item.Address.AddressLine1}}<br>
+                    {{ end }} 
+                    {{ if $item.Address.AddressLine2 }}
+                        {{ $item.Address.AddressLine2}}<br>
+                    {{ end }} 
+                    {{ if $item.Address.Locality }}
+                        {{ $item.Address.Locality}}<br>
+                    {{ end }} 
+                    {{ if $item.Address.Region }}
+                        {{ $item.Address.Region}}<br>
+                    {{ end }} 
+                    {{ if $item.Address.PostalCode }}
+                        {{ $item.Address.PostalCode}}<br>
+                    {{ end }} 
+                    {{ if $item.Address.Country }}
+                        {{ $item.Address.Country }}
+                    {{ end }}
+
+                    {{ if $item.CountryOfResidence }}
+                        <h5>Country of residence</h5>
+                        {{ $item.CountryOfResidence }}
+                    {{ end }}
+                </td>
+                <td>
+                    {{ if ne $item.DateOfBirth.Year 0 }}
+                        {{ if eq $item.DateOfBirth.Day 0 }}*/{{ else }}{{ $item.DateOfBirth.Day }}/{{ end }}{{ $item.DateOfBirth.Month }}/{{ $item.DateOfBirth.Year }}
+                    {{ end }}
+                </td>
+                <td>{{ $item.Nationality }}</td>
+                <td>
+                    <span class="label {{ if $item.ResignedOn.IsZero }}label-success{{ else }}label-danger{{ end }}">{{ $item.OfficerRole }}</span>
+                    <br><br>
+                    <dl>
+                        <dt>from</dt><dd>{{ $item.AppointedOn.Format "02-01-2006" }}</dd>{{ if not $item.ResignedOn.IsZero }}<dt>to</dt><dd>{{ $item.ResignedOn.Format "02-01-2006" }}</dd>{{ end }}
+                    </dl>
+                </td>
+
+            </tr>
+            {{ end }}
+        
+        </tbody>
+    </table>
+</div>
+{{ end }}
