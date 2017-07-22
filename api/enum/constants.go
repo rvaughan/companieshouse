@@ -1,4 +1,6 @@
----
+package enum
+
+const constantsYAML string = `---
 identification_type:
     'non-eea' : "Non European Economic Area"
     'eea' : "European Economic Area"
@@ -1495,4 +1497,4 @@ partial_data_available:
     'full-data-available-from-financial-conduct-authority' : "Refer to the Financial Conduct Authority for further information about this company"
     'full-data-available-from-department-of-the-economy' : "Refer to the Department of the Economy for further information about this company"
     'full-data-available-from-the-company' : "Contact the company directly for further information"
-    'full-data-available-from-financial-conduct-authority-mutuals-public-register' : "Refer to the Financial Conduct Authority Mutuals Public Register for further information about this company"
+    'full-data-available-from-financial-conduct-authority-mutuals-public-register' : "Refer to the Financial Conduct Authority Mutuals Public Register for further information about this company"`

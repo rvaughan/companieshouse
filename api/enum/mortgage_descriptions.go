@@ -1,4 +1,6 @@
-classificationDesc:
+package enum
+
+const mortgageDescriptionsYAML string = `classificationDesc:
     'charge-description' : "Charge description"
     'nature-of-charge' : "Nature of the charge"
 
@@ -180,4 +182,4 @@ filing_type:
     'create-charge-northern-ireland-pre-2006-companies-act-form-402-limited-liability-partnership' : "Registration of a charge (LLP402 NI)"
     'create-charge-northern-ireland-pre-2006-companies-act-form-C402' : "Registration of a charge (C402 NI)"
     'create-charge-by-judgement-enforcement-office-northern-ireland-pre-2006-companies-act-form-C408' : "Registration of a charge by the Judgement Enforcement office (C408 NI)"
-    'charge-certificate-northern-ireland-pre-2006-companies-act-form-C404' : "Certificate of a charge (C404 NI)"
+    'charge-certificate-northern-ireland-pre-2006-companies-act-form-C404' : "Certificate of a charge (C404 NI)"`

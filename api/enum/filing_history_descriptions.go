@@ -1,4 +1,6 @@
----
+package enum
+
+const filingHistoryDescriptionsYAML string = `---
 description:
     'liquidation-receiver-administrative-receivers-report' : "**Administrative Receiver's report**"
     'liquidation-compulsory-notice-winding-up' : "**Notice of order** of court to wind up."
@@ -1015,4 +1017,4 @@ description:
     'certificate-of-registration-and-designation-as-a-private-fund-limited-partnership' : "**Certificate of registration and designation** as a Private Fund Limited Partnership"
     'designation-as-a-private-fund-limited-partnership' : "**Designation** as a Private Fund Limited Partnership"
     'certificate-of-designation-as-a-private-fund-limited-partnership' : "**Certificate of designation** as a Private Fund Limited Partnership"
-    'registration-of-a-limited-partnership' : "**Registration** of a Limited Partnership"
+    'registration-of-a-limited-partnership' : "**Registration** of a Limited Partnership"`
