@@ -36,14 +36,13 @@ func TestGetCharges(t *testing.T) {
 
 	insolvenciesServer := httptest.NewServer(http.HandlerFunc(testhandlers.GetChargesHandler))
 	defer insolvenciesServer.Close()
-	api := API{}
-	api.SetAPIKey("12345")
+	api := NewAPI("12345")
 
 	t.Log("Testing the GetCharges function")
 	{
 		t.Log("\tWhen checking companies for charges")
 		for _, test := range TestCompanies {
-			api.setAPIURL(companyServer.URL)
+			api.setURL(companyServer.URL)
 			c, err := api.GetCompany(test.company)
 			{
 				if err != nil {
@@ -51,14 +50,14 @@ func TestGetCharges(t *testing.T) {
 				}
 				t.Logf("\t\tShould be able to get a company \"%s\". %v", test.company, testOK)
 
-				api.setAPIURL(insolvenciesServer.URL)
+				api.setURL(insolvenciesServer.URL)
 
 				data, _ := testhandlers.GetResponse(test.company, testhandlers.Charges)
 				expected := &ChargesResponse{}
 				json.Unmarshal([]byte(data), expected)
 
 				t.Logf("\t\t\tWhile using company %s(%s)", c.CompanyName, c.CompanyNumber)
-				resp, err := c.GetCharges()
+				resp, err := api.GetCharges(c.CompanyNumber)
 				{
 					if err != nil {
 						t.Fatal("\t\t\t\tShould be able to get the charges.", testFailed, err)

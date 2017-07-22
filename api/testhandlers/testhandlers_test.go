@@ -30,7 +30,7 @@ func TestGetFromPath(t *testing.T) {
 		path         string
 		element      int
 		expected     string
-		expect_error bool
+		expectedError bool
 	}{
 		{"/company/09999801", CompanyNumber, "09999801", false},
 		{"/company/09999801/officers", CompanyNumber, "09999801", false},
@@ -43,10 +43,10 @@ func TestGetFromPath(t *testing.T) {
 			t.Logf("\tWhen checking url \"%s\"", test.path)
 			resp, err := getFromPath(test.path, test.element)
 			{
-				if err != nil && !test.expect_error {
-					t.Fatalf("\t\t\tShould return error: %t. %v", test.expect_error, testFailed)
+				if err != nil && !test.expectedError {
+					t.Fatalf("\t\t\tShould return error: %t. %v", test.expectedError, testFailed)
 				}
-				t.Logf("\t\tShould return error: %t. %v", test.expect_error, testOK)
+				t.Logf("\t\tShould return error: %t. %v", test.expectedError, testOK)
 
 				if test.expected != resp {
 					t.Fatalf("\t\t\tShould receive \"%s\", but got %s. %v", test.expected, resp, testFailed)
@@ -56,5 +56,3 @@ func TestGetFromPath(t *testing.T) {
 		}
 	}
 }
-
-//Todo: testhandlers_test.go:33:3: don't use underscores in Go names; struct field expect_error should be expectError

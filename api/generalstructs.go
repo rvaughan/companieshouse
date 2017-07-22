@@ -23,31 +23,18 @@ import (
 	"time"
 )
 
-type (
-	// Address struct contains the details of addresses
-	Address struct {
-		Premises     string `json:"premises"`
-		AddressLine1 string `json:"address_line_1"`
-		AddressLine2 string `json:"address_line_2"`
-		Locality     string `json:"locality"`
-		Region       string `json:"region"`
-		PostalCode   string `json:"postal_code"`
-		Country      string `json:"country"`
-		CareOf       string `json:"care_of"`
-		PoBox        string `json:"po_box"`
-	}
-
-	// Links struct contains links to additional data and the original object (Self)
-	Links struct {
-		Psc              string `json:"persons_with_significant_control"`
-		PscStatements    string `json:"persons_with_significant_control_statements`
-		Registers        string `json:"registers"`
-		UkEstablishments string `json:"uk_establishments"`
-		DocumentMetaData string `json:"document_metadata"`
-		Document         string `json:"document"`
-		Self             string `json:"self"`
-	}
-)
+// Address struct contains the details of addresses
+type Address struct {
+	Premises     string `json:"premises"`
+	AddressLine1 string `json:"address_line_1"`
+	AddressLine2 string `json:"address_line_2"`
+	Locality     string `json:"locality"`
+	Region       string `json:"region"`
+	PostalCode   string `json:"postal_code"`
+	Country      string `json:"country"`
+	CareOf       string `json:"care_of"`
+	PoBox        string `json:"po_box"`
+}
 
 type ChDate struct {
 	time.Time
@@ -55,6 +42,9 @@ type ChDate struct {
 
 func (cd *ChDate) UnmarshalJSON(b []byte) (err error) {
 	s := strings.Trim(string(b), "\"")
+	if len(s) == 0 {
+		return
+	}
 	cd.Time, err = time.Parse("2006-01-02", s)
 	return
 }
@@ -68,5 +58,3 @@ func (dob *DateOfBirth) UnmarshalJSON(b []byte) (err error) {
 	dob.Time, err = time.Parse("2006-01-02T15:04:00", s)
 	return
 }
-
-// Todo: Remove general struct for links and use links per object to avoid empty parts, which don't belong to the object type

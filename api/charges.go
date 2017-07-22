@@ -19,24 +19,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package companieshouse
 
 import (
-	"encoding/json"
+	"github.com/BalkanTech/companieshouse/api/enum"
 )
+
+type AssetsCeasedReleased string
+
+func (f AssetsCeasedReleased) String() string {
+	return enum.MortgageDescriptions.Get("assets_ceased_released", string(f))
+}
+
+type ClassificationType string
+
+func (f ClassificationType) String() string {
+	return enum.MortgageDescriptions.Get("classificationDesc", string(f))
+}
+
+type ParticularsType string
+
+func (f ParticularsType) String() string {
+	return enum.MortgageDescriptions.Get("particular-description", string(f))
+}
+
+type SecuredDetailsType string
+
+func (f SecuredDetailsType) String() string {
+	return enum.MortgageDescriptions.Get("secured-details-description", string(f))
+}
+
+type Status string
+
+func (f Status) String() string {
+	return enum.MortgageDescriptions.Get("status", string(f))
+}
 
 type (
 	// Charge contains the data of a company's charges
 	Charge struct {
 		Etag                 string `json:"etag"`
 		AcquiredOn           ChDate `json:"acquired_on"`
-		AssetsCeasedReleased string `json:"assets_ceased_released"`
+		AssetsCeasedReleased AssetsCeasedReleased `json:"assets_ceased_released"`
 		ChargeCode           string `json:"charge_code"`
 		ChargeNumber         int    `json:"charge_number"`
 		Classification       struct {
 			Description string `json:"description"`
-			Type        string `json:"type"`
+			Type        ClassificationType `json:"type"`
 		} `json:"classification"`
 		CoveringInstrumentDate ChDate `json:"covering_instrument_date"`
-		CreatedOn                ChDate `json:"created_on"`
-		DeliveredOn              ChDate `json:"delivered_on"`
+		CreatedOn              ChDate `json:"created_on"`
+		DeliveredOn            ChDate `json:"delivered_on"`
 		Cases                  []struct {
 			Number int `json:"case_number"`
 			Links  struct {
@@ -55,13 +85,13 @@ type (
 			FloatingChargeCoversAll bool   `json:"chargor_acting_as_bare_trustee"`
 			NegativePledge          bool   `json:"contains_negative_pledge"`
 			Description             string `json:"description"`
-			Type                    string `json:"type"`
+			Type                    ParticularsType `json:"type"`
 		} `json:"particulars"`
 		PersonsEntitled []struct {
 			Name string `json:"name"`
 		} `json:"persons_entitled"`
-		ResolvedOn            ChDate `json:"resolved_on"`
-		SatisfiedOn           ChDate `json:"satisfied_on"`
+		ResolvedOn          ChDate `json:"resolved_on"`
+		SatisfiedOn         ChDate `json:"satisfied_on"`
 		ScottishAlterations struct {
 			AlterationsToOrder        bool `json:"has_alterations_to_order"`
 			AlterationsToProhibitions bool `json:"has_alterations_to_prohibitions"`
@@ -69,9 +99,9 @@ type (
 		} `json:"scottish_alterations"`
 		SecuredDetails struct {
 			Description string `json:"description"`
-			Type        string `json:"type"`
+			Type        SecuredDetailsType `json:"type"`
 		} `json:"secured_details"`
-		Status       string `json:"status"`
+		Status       Status `json:"status"`
 		Transactions []struct {
 			DeliveredOn      ChDate `json:"delivered_on"`
 			FilingType       string `json:"filing_type"`
@@ -86,59 +116,11 @@ type (
 
 	// ChargesResponse contains the server response of a data request to the companies house API
 	ChargesResponse struct {
-		Etag          string   `json:"etag"`
+		Etag               string   `json:"etag"`
 		PartSatisfiedCount int      `json:"part_satisfied_count"`
-		SatisfiedCount    int      `json:"satisfied_count"`
+		SatisfiedCount     int      `json:"satisfied_count"`
 		TotalCount         int      `json:"total_count"`
 		UnfileteredCount   int      `json:"unfiletered_count"`
-		Items       []*Charge `json:"items"`
+		Items              []Charge `json:"items"`
 	}
 )
-
-func (c *Company) getCharges() (*ChargesResponse, error) {
-	charges := &ChargesResponse{}
-
-	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/charges", nil, false, ContentTypeJSON)
-	if err != nil {
-		return charges, err
-	}
-
-	err = json.Unmarshal(resp, charges)
-	if err != nil {
-		return charges, err
-	}
-
-	return charges, err
-}
-
-// GetCharges gets the json data for a company's charges from the Companies House REST API
-// and returns a new ChargesResponse and an error
-func (a *API) GetCharges(c string) (<-chan *ChargesResponse, <-chan error) {
-	r := make(chan *ChargesResponse, 1)
-	e := make(chan error, 1)
-
-	go func() {
-		defer close(r)
-		defer close(e)
-
-		charges := &ChargesResponse{}
-
-		resp, err := a.CallAPI("/company/" + c + "/charges", nil, false, ContentTypeJSON)
-		if err != nil {
-			r <- nil
-			e <- err
-			return
-		}
-
-		err = json.Unmarshal(resp, charges)
-		if err != nil {
-			r <- nil
-			e <- err
-			return
-		}
-		r <- charges
-		e <- nil
-	}()
-
-	return r, e
-}

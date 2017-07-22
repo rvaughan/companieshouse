@@ -37,14 +37,13 @@ func TestGetInsolvencies(t *testing.T) {
 	insolvenciesServer := httptest.NewServer(http.HandlerFunc(testhandlers.GetInsolvenciesHandler))
 	defer insolvenciesServer.Close()
 
-	api := API{}
-	api.SetAPIKey("12345")
+	api := NewAPI("12345")
 
 	t.Log("Testing the GetInsolvencies function")
 	{
 		t.Log("\tWhen checking companies for insolvencies")
 		for _, test := range TestCompanies {
-			api.setAPIURL(companyServer.URL)
+			api.setURL(companyServer.URL)
 			c, err := api.GetCompany(test.company)
 			{
 				if err != nil {
@@ -52,14 +51,14 @@ func TestGetInsolvencies(t *testing.T) {
 				}
 				t.Logf("\t\tShould be able to get a company \"%s\". %v", test.company, testOK)
 
-				api.setAPIURL(insolvenciesServer.URL)
+				api.setURL(insolvenciesServer.URL)
 
 				data, _ := testhandlers.GetResponse(test.company, testhandlers.Insolvencies)
-				expected := &InsolvenciesResponse{}
+				expected := &InsolvencyHistoryResponse{}
 				json.Unmarshal([]byte(data), expected)
 
 				t.Logf("\t\t\tWhile using company %s(%s)", c.CompanyName, c.CompanyNumber)
-				resp, err := c.GetInsolvencyDetails()
+				resp, err := api.GetInsolvencyHistory(c.CompanyNumber)
 				{
 					if err != nil {
 						t.Fatal("\t\t\t\tShould be able to get the insolvencies.", testFailed, err)

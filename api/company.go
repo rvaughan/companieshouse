@@ -19,9 +19,68 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package companieshouse
 
 import (
-	"encoding/json"
 	"fmt"
+	"errors"
+	"github.com/BalkanTech/companieshouse/api/enum"
 )
+
+type CompanyType string
+
+func (f CompanyType) String() string {
+	return enum.Constants.Get("company_type", string(f))
+}
+
+type AccountType string
+
+func (f AccountType) String() string {
+	return enum.Constants.Get("account_type", string(f))
+}
+
+type ForeignAccountType string
+
+func (f ForeignAccountType) String() string {
+	return enum.Constants.Get("foreign_account_type", string(f))
+}
+
+type CompanyStatus string
+
+func (f CompanyStatus) String() string {
+	return enum.Constants.Get("company_status", string(f))
+}
+
+type CompanyStatusDetail string
+
+func (f CompanyStatusDetail) String() string {
+	return enum.Constants.Get("company_status_detail", string(f))
+}
+
+type TermsOfAccountPublication string
+
+func (f TermsOfAccountPublication) String() string {
+	return enum.Constants.Get("terms_of_account_publication", string(f))
+}
+
+type Jurisdiction string
+
+func (f Jurisdiction) String() string {
+	return enum.Constants.Get("jurisdiction", string(f))
+}
+
+type PartialDataAvailable string
+
+func (f PartialDataAvailable) String() string {
+	return enum.Constants.Get("partial_data_available", string(f))
+}
+
+type SICCode string
+
+func (f SICCode) String() string {
+	desc := enum.Constants.Get("sic_descriptions", string(f))
+	if desc == "" {
+		fmt.Sprintf("%s - Unknown", string(f), desc)
+	}
+	return fmt.Sprintf("%s - %s", string(f), desc)
+}
 
 type (
 	// PreviousName struct contains data of a company's previous names and the time of use
@@ -41,10 +100,10 @@ type (
 	Accounts struct {
 		AccountingReferenceDate RefDate `json:"accounting_reference_date"`
 		LastAccounts            struct {
-			MadeUpTo      ChDate `json:"made_up_to"`
-			Type          string `json:"type"`
-			PeriodEndOn   ChDate `json:"period_end_on"`
-			PeriodStartOn ChDate `json:"period_start_on"`
+			MadeUpTo      ChDate      `json:"made_up_to"`
+			Type          AccountType `json:"type"`
+			PeriodEndOn   ChDate      `json:"period_end_on"`
+			PeriodStartOn ChDate      `json:"period_start_on"`
 		} `json:"last_accounts"`
 		NextAccounts struct {
 			DueOn         ChDate `json:"due_on"`
@@ -75,8 +134,8 @@ type (
 	// ForeignCompany struct contains data of Foreign Companies
 	ForeignCompanyDetails struct {
 		AccountingRequirement struct {
-			ForeignAccountType        string `json:"foreign_account_type"`
-			TermsOfAccountPublication string `json:"terms_of_account_publication"`
+			ForeignAccountType        ForeignAccountType        `json:"foreign_account_type"`
+			TermsOfAccountPublication TermsOfAccountPublication `json:"terms_of_account_publication"`
 		} `json:"accounting_requirement"`
 		Accounts struct {
 			From RefDate `json:"account_period_from"`
@@ -99,38 +158,48 @@ type (
 
 	// Company struct contains basic company data
 	Company struct {
-		api                                  *API                  `json:"-"`
-		Etag                                 string                `json:"etag"`
-		CompanyNumber                        string                `json:"company_number"`
-		CompanyName                          string                `json:"company_name"`
-		CanFile                              bool                  `json:"can_file"`
-		Type                                 string                `json:"type"`
-		CompanyStatus                        string                `json:"company_status"`
-		CompanyStatusDetail                  string                `json:"company_status_detail"`
-		DateOfCessation                      ChDate                `json:"date_of_cessation"`
-		DateOfCreation                       ChDate                `json:"date_of_creation"`
-		HasCharges                           bool                  `json:"has_charges"`
-		HasInsolvencyHistory                 bool                  `json:"has_insolvency_history"`
-		IsCommunityInterestCompany           bool                  `json:"is_community_interest_company"`
-		Jurisdiction                         string                `json:"jurisdiction"`
-		LastFullMemberListDate               ChDate                `json:"last_full_members_list_date"`
-		Liquidated                           bool                  `json:"has_been_liquidated"`
-		UndeliverableRegisteredOfficeAddress bool                  `json:"undeliverable_registered_office_address"`
-		RegisteredOfficeIsInDispute          bool                  `json:"registered_office_is_in_dispute"`
-		RegisteredOfficeAddress              Address               `json:"registered_office_address"`
-		AnnualReturn                         AnnualReturn          `json:"annual_return"`
-		ConfirmationStatement                AnnualReturn          `json:"confirmation_statement"`
-		Accounts                             Accounts              `json:"accounts"`
-		SICCodes                             []string              `json:"sic_codes"`
-		PreviousCompanyNames                 []PreviousName        `json:"previous_company_names"`
-		Links                                Links                 `json:"links"`
-		BranchCompanyDetails                 Branch                `json:"branch_company_details"`
-		ForeignCompanyDetails                ForeignCompanyDetails `json:"foreign_company_details"`
+		api                        *API                  `json:"-"`
+		Accounts                   Accounts              `json:"accounts"`
+		AnnualReturn               AnnualReturn          `json:"annual_return"`
+		BranchCompanyDetails       Branch                `json:"branch_company_details"`
+		CanFile                    bool                  `json:"can_file"`
+		CompanyName                string                `json:"company_name"`
+		CompanyNumber              string                `json:"company_number"`
+		CompanyStatus              CompanyStatus         `json:"company_status"`
+		CompanyStatusDetail        CompanyStatusDetail   `json:"company_status_detail"`
+		ConfirmationStatement      AnnualReturn          `json:"confirmation_statement"`
+		DateOfCessation            ChDate                `json:"date_of_cessation"`
+		DateOfCreation             ChDate                `json:"date_of_creation"`
+		Etag                       string                `json:"etag"`
+		ForeignCompanyDetails      ForeignCompanyDetails `json:"foreign_company_details"`
+		HasBeenLiquidated          bool                  `json:"has_been_liquidated"`
+		HasCharges                 bool                  `json:"has_charges"`
+		HasInsolvencyHistory       bool                  `json:"has_insolvency_history"`
+		IsCommunityInterestCompany bool                  `json:"is_community_interest_company"`
+		Jurisdiction               Jurisdiction          `json:"jurisdiction"`
+		LastFullMembersListDate    ChDate                `json:"last_full_members_list_date"`
+		Links                      struct {
+			Charges                                 string `json:"charges"`
+			FilingHistory                           string `json:"filing_history"`
+			Insolvency                              string `json:"insolvency"`
+			Officers                                string `json:"officers"`
+			PersonsWithSignificantControl           string `json:"persons_with_significant_control"`
+			PersonsWithSignificantControlStatements string `json:"persons_with_significant_control_statements"`
+			Registers                               string `json:"registers"`
+			Self                                    string `json:"self"`
+		} `json:"links"`
+		PartialDataAvailable                 PartialDataAvailable `json:"partial_data_available"`
+		PreviousCompanyNames                 []PreviousName       `json:"previous_company_names"`
+		RegisteredOfficeAddress              Address              `json:"registered_office_address"`
+		RegisteredOfficeIsInDispute          bool                 `json:"registered_office_is_in_dispute"`
+		SICCodes                             []SICCode            `json:"sic_codes"`
+		Type                                 CompanyType          `json:"type"`
+		UndeliverableRegisteredOfficeAddress bool                 `json:"undeliverable_registered_office_address"`
 
-		Officers          *OfficerResponse           `json:"-"`
-		Filings           *FilingResponse            `json:"-"`
-		Charges           *ChargesResponse           `json:"-"`
-		InsolvencyHistory *InsolvencyHistoryResponse `json:"-"`
+		Officers          OfficerResponse           `json:"-"`
+		FilingHistory     FilingResponse            `json:"-"`
+		Charges           ChargesResponse           `json:"-"`
+		InsolvencyHistory InsolvencyHistoryResponse `json:"-"`
 	}
 )
 
@@ -138,85 +207,12 @@ func (c Company) HasTasks() bool {
 	return c.AnnualReturn != (AnnualReturn{}) || c.ConfirmationStatement != (AnnualReturn{}) || c.Accounts != (Accounts{})
 }
 
-func (a *API) getCompany(companyNumber string, c *Company) <-chan error {
-	e := make(chan error, 1)
-
-	go func() {
-		defer close(e)
-		resp, err := a.CallAPI("/company/"+companyNumber, nil, false, ContentTypeJSON)
-		if err != nil {
-			e <- err
-			return
+// GetFiling
+func (c Company) GetFiling(tid string) (*Filing, error) {
+	for _, f := range c.FilingHistory.Items {
+		if f.TransactionID == tid {
+			return &f, nil
 		}
-
-		err = json.Unmarshal(resp, &c)
-		if err != nil {
-			e <- err
-			return
-		}
-
-		e <- nil
-	}()
-
-	return e
+	}
+	return nil, errors.New("Not found")
 }
-
-type CompanyError map[string]error
-
-func (e CompanyError) Set(k string, err error) {
-	if e == nil {
-		e = make(map[string]error)
-	}
-	e[k] = err
-}
-
-func (e CompanyError) Error() string {
-	return fmt.Sprintf("%v", e)
-}
-
-// GetCompany gets the json data for a company from the Companies House REST API
-// and returns a new Company and an error
-func (a *API) GetCompany(companyNumber string) (*Company, error) {
-	c := &Company{api: a}
-	var errs CompanyError
-	// Fetch details
-	CompanyErr := a.getCompany(companyNumber, c)
-	officers, officersErr := a.GetOfficers(companyNumber)
-	filings, filingsErr := a.GetFilings(companyNumber)
-	charges, chargesErr := a.GetCharges(companyNumber)
-	insolvency, insolvencyErr := a.GetInsolvencyHistory(companyNumber)
-
-	// Process answers
-	//c := <-company
-	if err := <-CompanyErr; err != nil {
-		errs.Set("company", err)
-	}
-
-	if err := <-officersErr; err != nil {
-		errs.Set("officers", err)
-	}
-	c.Officers = <-officers
-
-	if err := <-filingsErr; err != nil {
-		errs.Set("filings", err)
-	}
-	c.Filings = <-filings
-
-	if err := <-chargesErr; err != nil {
-		errs.Set("charges", err)
-	}
-	c.Charges = <-charges
-
-	if err := <-insolvencyErr; err != nil {
-		errs.Set("insolvency", err)
-	}
-	c.InsolvencyHistory = <-insolvency
-
-	if errs != nil {
-		return nil, errs
-	}
-
-	return c, nil
-}
-
-// Todo: SIC code description

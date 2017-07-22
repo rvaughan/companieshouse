@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/BalkanTech/companieshouse/api"
 	"github.com/gorilla/mux"
@@ -8,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"bytes"
 )
 
 type Alert struct {
@@ -26,7 +26,7 @@ func newData() *Data {
 	return &Data{Data: make(map[string]interface{})}
 }
 
-var ch = companieshouse.CompaniesHouseAPI(os.Getenv("CH_API_KEY"))
+var ch = companieshouse.NewAPI(os.Getenv("CH_API_KEY"))
 
 func main() {
 	r := mux.NewRouter()
@@ -147,7 +147,7 @@ func getFile(w http.ResponseWriter, r *http.Request, cd string) {
 		fmt.Fprintf(w, err.Error())
 	}
 
-	d, err := c.GetDocument(f)
+	d, err := ch.GetDocument(f)
 	if err != nil {
 		fmt.Fprintf(w, err.Error())
 	}

@@ -19,8 +19,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package companieshouse
 
 import (
-	"encoding/json"
+	"github.com/BalkanTech/companieshouse/api/enum"
 )
+
+type IdentificationType string
+
+func (f IdentificationType) String() string {
+	return enum.Constants.Get("identification_type", string(f))
+}
+
+type OfficerRole string
+
+func (f OfficerRole) String() string {
+	return enum.Constants.Get("officer_role", string(f))
+}
 
 type (
 	// DateOfBirth struct consists of Day(int), Month (int) and Year (int)
@@ -32,7 +44,7 @@ type (
 
 	// Identification struct
 	Identification struct {
-		IDType             string `json:"identification_type"`
+		IdentificationType             IdentificationType `json:"identification_type"`
 		Authority          string `json:"legal_authority"`
 		LegalForm          string `json:"legal_form"`
 		PlaceRegistered    string `json:"place_registered"`
@@ -58,7 +70,7 @@ type (
 		Name        string `json:"name"`
 		Nationality string `json:"nationality"`
 		Occupation  string `json:"occupation"`
-		OfficerRole string `json:"officer_role"`
+		OfficerRole OfficerRole `json:"officer_role"`
 		ResignedOn  ChDate `json:"resigned_on"`
 	}
 
@@ -72,55 +84,9 @@ type (
 		ActiveCount   int       `json:"active_count"`
 		InactiveCount int       `json:"inactive_count"`
 		ResignedCount int       `json:"resigned_count"`
-		Items         []*Officer `json:"items"`
+		Items         []Officer `json:"items"`
 		Links         struct {
 			self string `json:"self"`
 		} `json:"Links"`
 	}
 )
-
-// GetOfficers gets the json data for a company's officers from the Companies House REST API
-// and returns a new OfficersResponse and an error
-func (c *Company) getOfficers() (*OfficerResponse, error) {
-	officers := &OfficerResponse{}
-	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/officers", nil, false, ContentTypeJSON)
-	if err != nil {
-		return nil, err
-	}
-
-	err = json.Unmarshal(resp, &officers)
-	if err != nil {
-		return nil, err
-	}
-
-	return officers, nil
-}
-
-func (a *API) GetOfficers(c string) (<-chan *OfficerResponse, <-chan error) {
-	r := make(chan *OfficerResponse, 1)
-	e := make(chan error, 1)
-
-	go func() {
-		defer close(r)
-		defer close(e)
-
-		officers := &OfficerResponse{}
-			resp, err := a.CallAPI("/company/" + c +"/officers", nil, false, ContentTypeJSON)
-		if err != nil {
-			r <- nil
-			e <- err
-			return
-		}
-
-		err = json.Unmarshal(resp, &officers)
-		if err != nil {
-			r <- nil
-			e <- err
-			return
-		}
-		r <- officers
-		e <- nil
-	}()
-
-	return r, e
-}

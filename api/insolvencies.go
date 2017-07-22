@@ -19,15 +19,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package companieshouse
 
 import (
-	"encoding/json"
+	"github.com/BalkanTech/companieshouse/api/enum"
+	"github.com/BalkanTech/companieshouse/api/stringtools"
 )
+
+type InsolvencyCaseDateType string
+
+func (f InsolvencyCaseDateType) String() string {
+	return enum.Constants.Get("insolvency_case_date_type", string(f))
+}
+
+type InsolvencyCaseType string
+func (f InsolvencyCaseType) String() string {
+	return enum.Constants.Get("insolvency_case_type", string(f))
+}
 
 type (
 	// Insolvency contains the data of an insolvency case
 	Insolvency struct {
 		Dates []struct {
 			Date string `json:"date"`
-			Type string `json:"type"`
+			Type InsolvencyCaseDateType `json:"type"`
 		} `json:"dates"`
 		Notes         []string `json:"notes"`
 		Number        string   `json:"number"`
@@ -36,61 +48,16 @@ type (
 			Appointed string  `json:"appointed_on"`
 			Ceased    string  `json:"ceased_to_act_on"`
 			Name      string  `json:"name"`
-			Role      string  `json:"role"`
+			Role      stringtools.TitledString  `json:"role"`
 		} `json:"practitioners"`
-		Type string `json:"type"`
+		Type InsolvencyCaseType `json:"type"`
+		Status stringtools.TitledString `json:"status"`
 	}
 
 	// InsolvenciesResponse contains the server response of a data request to the companies house API
 	InsolvencyHistoryResponse struct {
 		Etag   string       `json:"etag"`
 		Status []string     `json:"status"`
-		Cases  []*Insolvency `json:"cases"`
+		Cases  []Insolvency `json:"cases"`
 	}
 )
-
-// GetInsolvencyDetails gets the json data for a company's insolvency details from the Companies House REST API
-// and returns a new InsolvenciesResponse and an error
-func (c *Company) GetInsolvencyDetails() (*InsolvencyHistoryResponse, error) {
-	insolvencies := &InsolvencyHistoryResponse{}
-	resp, err := c.api.CallAPI("/company/"+c.CompanyNumber+"/insolvency", nil, false, ContentTypeJSON)
-	if err != nil {
-		return insolvencies, err
-	}
-
-	err = json.Unmarshal(resp, insolvencies)
-	if err != nil {
-		return insolvencies, err
-	}
-	return insolvencies, err
-}
-
-func (a *API) GetInsolvencyHistory(c string) (<-chan *InsolvencyHistoryResponse, <-chan error) {
-	r := make(chan *InsolvencyHistoryResponse, 1)
-	e := make(chan error, 1)
-
-	go func() {
-		defer close(r)
-		defer close(e)
-
-		ih := &InsolvencyHistoryResponse{}
-		resp, err := a.CallAPI("/company/" + c + "/insolvency", nil, false, ContentTypeJSON)
-		if err != nil {
-			r <- nil
-			e <- err
-			return
-		}
-
-		err = json.Unmarshal(resp, &ih)
-		if err != nil {
-			r <- nil
-			e <- err
-			return
-		}
-
-		r <- ih
-		e <- nil
-	}()
-
-	return r, e
-}

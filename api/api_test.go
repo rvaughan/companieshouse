@@ -40,8 +40,7 @@ func TestURLCreation(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer server.Close()
 
-	api := API{}
-	api.SetAPIKey("12345")
+	api := NewAPI("12345")
 
 	var tests = []struct {
 		path     string
@@ -66,7 +65,7 @@ func TestURLCreation(t *testing.T) {
 		}
 	}
 
-	api.setAPIURL(server.URL)
+	api.setURL(server.URL)
 	var tests2 = []struct {
 		path     string
 		expected string
@@ -98,8 +97,7 @@ func TestPrepareRequest(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer server.Close()
 
-	api := API{}
-	api.SetAPIKey("12345")
+	api := NewAPI("12345")
 
 	method := "GET"
 	url, _ := url.Parse(server.URL)
@@ -107,7 +105,7 @@ func TestPrepareRequest(t *testing.T) {
 
 	t.Log("Testing the API prepareRequest function")
 	{
-		resp, err := api.prepareRequest(server.URL)
+		resp, err := api.prepareRequest(server.URL, "GET")
 		if err != nil {
 			t.Fatal("\tShould be able to make the call.", testFailed, err)
 		}
@@ -142,15 +140,13 @@ func TestGetResponse(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer server.Close()
 
-	api := API{}
-	api.SetAPIKey("12345")
-	api.setAPIURL(server.URL)
+	api := NewAPI("12345")
 
 	t.Log("Testing getResponse function")
 	{
 		t.Logf("\tWhen checking \"%s\" for status code \"%d\" without a content type", server.URL, statusCode)
 		{
-			resp, err := api.getResponse(server.URL, nil, "")
+			resp, err := api.getResponse(server.URL, "GET", nil, "")
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the Get call.", testFailed, err)
@@ -184,7 +180,7 @@ func TestGetResponse(t *testing.T) {
 
 		t.Logf("\tWhen checking \"%s\" for status code \"%d\" with a content type %s", server.URL, statusCode, contentType)
 		{
-			resp, err := api.getResponse(server.URL, nil, contentType)
+			resp, err := api.getResponse(server.URL, "GET", nil, contentType)
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the Get call.", testFailed, err)
@@ -213,7 +209,7 @@ func TestGetResponse(t *testing.T) {
 		url := "https://document-api.companieshouse.gov.uk/document/n1EjP_MALLs8xZp5hs86iHcYDli0TE-n6t4HUDeZuq8/content"
 		t.Logf("\tWhen checking \"%s\" for status code \"%d\" with a content type %s to see if overriding works", url, statusCode, contentType)
 		{
-			resp, err := api.getResponse(url, nil, contentType)
+			resp, err := api.getResponse(url, "GET", nil, contentType)
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the Get call.", testFailed, err)
@@ -248,15 +244,13 @@ func TestCallAPI(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(testhandlers.GetResponseHandler))
 	defer server.Close()
 
-	api := API{}
-	api.SetAPIKey("12345")
-	api.setAPIURL(server.URL)
+	api := NewAPI("12345")
 
 	t.Log("Testing the callAPI function")
 	{
 		t.Logf("\tWhen checking \"%s\"", server.URL)
 		{
-			resp, err := api.CallAPI(server.URL+"/test", nil, true, ContentTypeJSON)
+			resp, err := api.CallAPI(server.URL+"/test", nil, ContentTypeJSON)
 			{
 				if err != nil {
 					t.Fatal("\t\tShould be able to make the call.", testFailed, err)
