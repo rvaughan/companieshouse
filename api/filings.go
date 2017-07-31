@@ -21,7 +21,7 @@ package companieshouse
 import (
 	"html/template"
 	"github.com/BalkanTech/companieshouse/api/enum"
-	"github.com/BalkanTech/companieshouse/api/stringtools"
+	"github.com/BalkanTech/kit/stringutils"
 )
 
 
@@ -33,7 +33,7 @@ func (f FilingDescription) String() string {
 
 func (f FilingDescription) AsHTML() template.HTML {
 	d := f.String()
-	stringtools.ReplaceBetween(&d, "**", "<strong>", "</strong>")
+	stringutils.ReplaceBetween(&d, "**", "<strong>", "</strong>")
 	return template.HTML(d)
 }
 
@@ -79,7 +79,7 @@ type (
 			} `json:"description_values"`
 		} `json:"associated_filings"`
 		Barcode           string            `json:"barcode"`
-		Category          stringtools.TitledString      `json:"category"`
+		Category          stringutils.TitledString      `json:"category"`
 		Subcategory       string            `json:"subcategory"`
 		Date              ChDate            `json:"date"`
 		Description       FilingDescription `json:"description"`

@@ -20,7 +20,7 @@ package companieshouse
 
 import (
 	"github.com/BalkanTech/companieshouse/api/enum"
-	"github.com/BalkanTech/companieshouse/api/stringtools"
+	"github.com/BalkanTech/kit/stringutils"
 )
 
 type InsolvencyCaseDateType string
@@ -48,10 +48,10 @@ type (
 			Appointed string  `json:"appointed_on"`
 			Ceased    string  `json:"ceased_to_act_on"`
 			Name      string  `json:"name"`
-			Role      stringtools.TitledString  `json:"role"`
+			Role      stringutils.TitledString  `json:"role"`
 		} `json:"practitioners"`
 		Type InsolvencyCaseType `json:"type"`
-		Status stringtools.TitledString `json:"status"`
+		Status stringutils.TitledString `json:"status"`
 	}
 
 	// InsolvenciesResponse contains the server response of a data request to the companies house API
