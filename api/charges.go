@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package companieshouse
 
 import (
-	"github.com/BalkanTech/companieshouse/api/enum"
+	"github.com/rvaughan/companieshouse/api/enum"
 )
 
 type AssetsCeasedReleased string
@@ -55,13 +55,13 @@ func (f Status) String() string {
 type (
 	// Charge contains the data of a company's charges
 	Charge struct {
-		Etag                 string `json:"etag"`
-		AcquiredOn           ChDate `json:"acquired_on"`
+		Etag                 string               `json:"etag"`
+		AcquiredOn           ChDate               `json:"acquired_on"`
 		AssetsCeasedReleased AssetsCeasedReleased `json:"assets_ceased_released"`
-		ChargeCode           string `json:"charge_code"`
-		ChargeNumber         int    `json:"charge_number"`
+		ChargeCode           string               `json:"charge_code"`
+		ChargeNumber         int                  `json:"charge_number"`
 		Classification       struct {
-			Description string `json:"description"`
+			Description string             `json:"description"`
 			Type        ClassificationType `json:"type"`
 		} `json:"classification"`
 		CoveringInstrumentDate ChDate `json:"covering_instrument_date"`
@@ -79,12 +79,12 @@ type (
 		} `json:"links"`
 		MoreThanFourEntitled bool `json:"more_than_four_persons_entitled"`
 		Particulars          struct {
-			ChargorBareTrustee      bool   `json:"chargor_acting_as_bare_trustee"`
-			FixedCharge             bool   `json:"contains_fixed_charge"`
-			FloatingCharge          bool   `json:"floating_charge_covers_all"`
-			FloatingChargeCoversAll bool   `json:"chargor_acting_as_bare_trustee"`
-			NegativePledge          bool   `json:"contains_negative_pledge"`
-			Description             string `json:"description"`
+			ChargorBareTrustee      bool            `json:"chargor_acting_as_bare_trustee"`
+			FixedCharge             bool            `json:"contains_fixed_charge"`
+			FloatingCharge          bool            `json:"floating_charge_covers_all"`
+			FloatingChargeCoversAll bool            `json:"chargor_acting_as_bare_trustee"`
+			NegativePledge          bool            `json:"contains_negative_pledge"`
+			Description             string          `json:"description"`
 			Type                    ParticularsType `json:"type"`
 		} `json:"particulars"`
 		PersonsEntitled []struct {
@@ -98,7 +98,7 @@ type (
 			RestrictingProvisions     bool `json:"has_restricting_provisions"`
 		} `json:"scottish_alterations"`
 		SecuredDetails struct {
-			Description string `json:"description"`
+			Description string             `json:"description"`
 			Type        SecuredDetailsType `json:"type"`
 		} `json:"secured_details"`
 		Status       Status `json:"status"`

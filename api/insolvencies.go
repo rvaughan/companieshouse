@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package companieshouse
 
 import (
-	"github.com/BalkanTech/companieshouse/api/enum"
 	"github.com/BalkanTech/kit/stringutils"
+	"github.com/rvaughan/companieshouse/api/enum"
 )
 
 type InsolvencyCaseDateType string
@@ -30,6 +30,7 @@ func (f InsolvencyCaseDateType) String() string {
 }
 
 type InsolvencyCaseType string
+
 func (f InsolvencyCaseType) String() string {
 	return enum.Constants.Get("insolvency_case_type", string(f))
 }
@@ -38,19 +39,19 @@ type (
 	// Insolvency contains the data of an insolvency case
 	Insolvency struct {
 		Dates []struct {
-			Date string `json:"date"`
+			Date string                 `json:"date"`
 			Type InsolvencyCaseDateType `json:"type"`
 		} `json:"dates"`
 		Notes         []string `json:"notes"`
 		Number        string   `json:"number"`
 		Practitioners []struct {
-			Address   Address `json:"address"`
-			Appointed string  `json:"appointed_on"`
-			Ceased    string  `json:"ceased_to_act_on"`
-			Name      string  `json:"name"`
-			Role      stringutils.TitledString  `json:"role"`
+			Address   Address                  `json:"address"`
+			Appointed string                   `json:"appointed_on"`
+			Ceased    string                   `json:"ceased_to_act_on"`
+			Name      string                   `json:"name"`
+			Role      stringutils.TitledString `json:"role"`
 		} `json:"practitioners"`
-		Type InsolvencyCaseType `json:"type"`
+		Type   InsolvencyCaseType       `json:"type"`
 		Status stringutils.TitledString `json:"status"`
 	}
 

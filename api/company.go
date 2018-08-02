@@ -19,9 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package companieshouse
 
 import (
-	"fmt"
 	"errors"
-	"github.com/BalkanTech/companieshouse/api/enum"
+	"fmt"
+
+	"github.com/rvaughan/companieshouse/api/enum"
 )
 
 type CompanyType string

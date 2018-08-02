@@ -20,10 +20,10 @@ package companieshouse
 
 import (
 	"html/template"
-	"github.com/BalkanTech/companieshouse/api/enum"
-	"github.com/BalkanTech/kit/stringutils"
-)
 
+	"github.com/BalkanTech/kit/stringutils"
+	"github.com/rvaughan/companieshouse/api/enum"
+)
 
 type FilingDescription string
 
@@ -78,11 +78,11 @@ type (
 				Description FilingDescription `json:"description"`
 			} `json:"description_values"`
 		} `json:"associated_filings"`
-		Barcode           string            `json:"barcode"`
-		Category          stringutils.TitledString      `json:"category"`
-		Subcategory       string            `json:"subcategory"`
-		Date              ChDate            `json:"date"`
-		Description       FilingDescription `json:"description"`
+		Barcode           string                   `json:"barcode"`
+		Category          stringutils.TitledString `json:"category"`
+		Subcategory       string                   `json:"subcategory"`
+		Date              ChDate                   `json:"date"`
+		Description       FilingDescription        `json:"description"`
 		DescriptionValues struct {
 			Description              string `json:"description"`
 			BroughtDownDate          string `json:"brought_down_date"`

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package companieshouse
 
 import (
-	"github.com/BalkanTech/companieshouse/api/enum"
+	"github.com/rvaughan/companieshouse/api/enum"
 )
 
 type IdentificationType string
@@ -44,11 +44,11 @@ type (
 
 	// Identification struct
 	Identification struct {
-		IdentificationType             IdentificationType `json:"identification_type"`
-		Authority          string `json:"legal_authority"`
-		LegalForm          string `json:"legal_form"`
-		PlaceRegistered    string `json:"place_registered"`
-		RegistrationNumber string `json:"registration_number"`
+		IdentificationType IdentificationType `json:"identification_type"`
+		Authority          string             `json:"legal_authority"`
+		LegalForm          string             `json:"legal_form"`
+		PlaceRegistered    string             `json:"place_registered"`
+		RegistrationNumber string             `json:"registration_number"`
 	}
 
 	// Officer struct contains the data of a company's officers
@@ -67,11 +67,11 @@ type (
 				Appointments string `json:"appointments"`
 			} `json:"officer"`
 		} `json:"links"`
-		Name        string `json:"name"`
-		Nationality string `json:"nationality"`
-		Occupation  string `json:"occupation"`
+		Name        string      `json:"name"`
+		Nationality string      `json:"nationality"`
+		Occupation  string      `json:"occupation"`
 		OfficerRole OfficerRole `json:"officer_role"`
-		ResignedOn  ChDate `json:"resigned_on"`
+		ResignedOn  ChDate      `json:"resigned_on"`
 	}
 
 	// OfficerResponse contains the server response of a data request to the companies house API
